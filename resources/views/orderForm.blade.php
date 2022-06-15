@@ -7,32 +7,32 @@
                     @csrf
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Nome :</label>
-                        <input type="text" class="form-control" name="name" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="name" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputSurname" class="form-label">Cognome :</label>
-                        <input type="text" class="form-control" name="surname" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="surname" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputCitta" class="form-label">Città :</label>
-                        <input type="text" class="form-control" name="citta" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="citta" aria-describedby="emailHelp" required>
                     </div>
                     
                     <div class="mb-3">
                         <label for="exampleInputIndirizzo" class="form-label">Indirizzo :</label>
-                        <input type="text" class="form-control" name="indirizzo" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="indirizzo" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputCap" class="form-label">C.A.P. :</label>
-                        <input type="text" class="form-control" name="cap" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="cap" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="exampleInputRag" class="form-label">Ragione Sociale :</label>
-                        <input type="text" class="form-control" name="rag" aria-describedby="emailHelp">
+                        <label for="exampleInputEmail" class="form-label">Email :</label>
+                        <input type="email" class="form-control" name="email" aria-describedby="emailHelp" required>
                     </div>
                     
                     <div class="form-group">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="form-group">
                         <label class="active" for="timeStandard">Ora :</label>
-                        <input class="form-control" id="timeStandard" name="time" type="time">
+                        <input class="form-control" id="timeStandard" name="time" type="time" required>
                     </div>
                   
 

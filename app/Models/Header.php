@@ -16,9 +16,10 @@ class Header extends Model
         'citta',
         'indirizzo',
         'cap',
-        'ragione_sociale',
+        'email',
         'data',
         'time',
+        'accettazione',
     ];
 
     public function selectedProducts(){
