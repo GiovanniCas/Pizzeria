@@ -18,9 +18,9 @@ return new class extends Migration
             $table->biginteger("product_id")->unsigned();
             $table->foreign("product_id")->references("id")->on("products");
             $table->biginteger("header_id")->unsigned();
-            $table->foreign("header_id")->references("id")->on("headers");
+            $table->foreign("header_id")->references("id")->on("headers")->onDelete('cascade');
             $table->integer("quantity");
-            $table->integer("price_tot");
+            $table->integer("price_uni");
             $table->timestamps();
         });
     }

@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('headers', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("surname");
-            $table->string("citta");
-            $table->string("indirizzo");
-            $table->string("cap");
-            $table->string("ragione_sociale");
-            $table->date("data");
-            $table->time("time");
+            $table->string("name")->nullable();
+            $table->string("surname")->nullable();
+            $table->string("citta")->nullable();
+            $table->string("indirizzo")->nullable();
+            $table->string("cap")->nullable();
+            $table->string("email")->nullable();
+            $table->date("data")->nullable();
+            $table->time("time")->nullable();
+            $table->boolean("accettazione")->default(false);
             $table->timestamps();
         });
     }
