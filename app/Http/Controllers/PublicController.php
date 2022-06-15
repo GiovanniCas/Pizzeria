@@ -15,13 +15,20 @@ class PublicController extends Controller
 
     public function pizza(){
       
-        $products = DB::table('products')->where('category_id', '=', 1)->get();
+        $products = DB::table('products')->get();
         return view("pizza" , compact('products'));
     }
 
     public function cart(){
-        $idsPizze = SelectedProduct::all();
-        return view('cart' , compact ('idsPizze'));
+        $prodottiSelezionati = SelectedProduct::all()->where('header_id' , session()->get('header_id'));
+              
+        $totale = 0;
+        foreach($prodottiSelezionati as $prodottoSelezionato){
+            $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
+            $totale += $tot;
+            
+        }
+        return view('cart' , compact ('prodottiSelezionati'))->with(compact('totale'));
     }
 
     
