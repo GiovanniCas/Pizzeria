@@ -39,5 +39,9 @@ Route::put('/modifica/ordine/{prodottoSelezionato}' , [SelectedController::class
 //eliminazione ordini da parte del revisore
 Route::delete('/elimina/prodotto/{header}' , [OrderController::class , "destroyOrder"])->name("destroyOrder");
 
+//creazione personale
+Route::get('/personale' , [RevisorController::class , "staff"])->name('staff');
+Route::post('/aggiungi/personale' , [RevisorController::class , "addStaff"])->name('addStaff');
+
 
 

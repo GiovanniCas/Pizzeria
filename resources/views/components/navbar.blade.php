@@ -17,7 +17,10 @@
         </li>     
         <li class="nav-item">
           <a class="nav-link" href="{{route('revisor')}}">Revisore</a>
-        </li>   
+        </li>  
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('staff')}}">Personale</a>
+        </li>  
         <li class="nav-item">
           <a class="nav-link" href="{{route('cart')}}"><i class="fa-solid fa-cart-shopping"></i></a>
         </li>

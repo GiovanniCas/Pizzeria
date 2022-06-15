@@ -15,4 +15,14 @@ class RevisorController extends Controller
       
         return view("revisore", compact('headers'))->with(compact('prodottiSelezionati'));
     }
+
+    public function staff(){
+        return view('staff');
+    }
+
+    public function addStaff(Request $request){
+        dd($request->all());
+
+        return redirect(route('staff'));
+    }
 }
