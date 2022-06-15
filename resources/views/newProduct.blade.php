@@ -7,17 +7,17 @@
                 @csrf
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Nome Prodotto</label>
-                        <input type="text" class="form-control" name="name" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="name" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputDescription" class="form-label">Descrizione</label>
-                        <input type="text" class="form-control" name="description" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="description" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputPrice" class="form-label">Prezzo</label>
-                        <input type="text" class="form-control" name="price" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="price" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">

@@ -3,7 +3,7 @@
         <h2>Modifica il Prodotto</h2>
         <div class="row">
             <div class="col-12 col-md-6 mt-5">
-                <form method="POST" action="" enctype="multipart/form-data">
+                <form method="POST" action="{{route('modifyProduct', compact('product'))}}" enctype="multipart/form-data">
                 @method('put')    
                 @csrf
                     <div class="mb-3">

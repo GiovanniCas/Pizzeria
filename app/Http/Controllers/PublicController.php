@@ -15,7 +15,8 @@ class PublicController extends Controller
 
     public function pizza(){
       
-        $products = DB::table('products')->get();
+        $products = Product::all();
+    
         return view("pizza" , compact('products'));
     }
 

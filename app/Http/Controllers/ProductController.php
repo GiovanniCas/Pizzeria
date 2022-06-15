@@ -33,4 +33,15 @@ class ProductController extends Controller
         $categories = Category::all();
         return view('modificaProdotto', compact('product'))->with(compact('categories'));
     }
+
+    public function modifyProduct(Request $request , Product $product){
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->category_id = $request->category_id;
+        
+        $product->save();
+  
+        return redirect(route('pizza'));
+    }
 }

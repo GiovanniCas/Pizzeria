@@ -17,7 +17,7 @@ Route::get('/form/prodotto', [ProductController::class , "newProduct"])->name("n
 
 //rotta per inserimento e per modifica nuovo prodotto
 Route::post('/form/prodotto/submit' , [ProductController::class , "submitProduct"])->name("submitProduct");
-Route::get('/form/modifica' , [ProductController::class , "formModify"])->name("formModify");
+Route::get('/form/modifica/{product}' , [ProductController::class , "formModify"])->name("formModify");
 Route::put('/form/modifica/submit/{product}' , [ProductController::class , "modifyProduct"])->name("modifyProduct");
 
 //rotta per aggiungere al carrello
