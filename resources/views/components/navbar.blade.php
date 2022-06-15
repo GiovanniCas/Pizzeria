@@ -10,18 +10,17 @@
           <a class="nav-link active" aria-current="page" href="{{route('welcome')}}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{route('pizza')}}">Pizze</a>
+          <a class="nav-link" href="{{route('pizza')}}">Prodotti</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('cart')}}">carrello</a>
-        </li>
-      
         <li class="nav-item">
           <a class="nav-link" href="{{route('newProduct')}}">Aggiungi Prodotto</a>
         </li>     
         <li class="nav-item">
-          <a class="nav-link" href="{{route('orderForm')}}">Ordini</a>
+          <a class="nav-link" href="{{route('revisor')}}">Revisore</a>
         </li>   
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('cart')}}"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
       </ul>
     </div>
   </div>
