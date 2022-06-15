@@ -33,10 +33,10 @@
                     </div>
 
 
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="exampleInputCategory" class="form-label">Seleziona un immagine</label>
                         <input type="file" class="form-control" name="category" aria-describedby="emailHelp">
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn btn-primary mt-3">Aggiungi</button>
                 </form>

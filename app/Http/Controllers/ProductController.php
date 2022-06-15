@@ -28,4 +28,9 @@ class ProductController extends Controller
         return view("newProduct" , compact('categories')) ;
 
     }
+
+    public function formModify(Product $product){
+        $categories = Category::all();
+        return view('modificaProdotto', compact('product'))->with(compact('categories'));
+    }
 }

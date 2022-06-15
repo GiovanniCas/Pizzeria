@@ -20,10 +20,10 @@ class Product extends Model
     ];
 
     public function categories(){
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class , 'category_id');
     }
 
     public function selectedProducts(){
-        return $this->hasManny(SelectedProduct::class);
+        return $this->hasMany(SelectedProduct::class);
     }
 }
