@@ -16,8 +16,14 @@
           <a class="nav-link" href="{{route('newProduct')}}">Aggiungi Prodotto</a>
         </li>     
         <li class="nav-item">
-          <a class="nav-link" href="{{route('revisor')}}">Revisore</a>
-        </li>  
+          <a class="nav-link" href="{{route('revisor')}}">Cuoco</a>
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('fattorino')}}">Consegne</a>
+        </li>   
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('consegne')}}">Le Tue Consegne</a>
+        </li> 
         <li class="nav-item">
           <a class="nav-link" href="{{route('staff')}}">Personale</a>
         </li>  

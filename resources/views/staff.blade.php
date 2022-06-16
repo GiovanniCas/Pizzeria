@@ -28,7 +28,10 @@
 
                     <div class="mb-3">
                         <label for="exampleInputMansione" class="form-label">Mansione</label>
-                        <input type="text" class="form-control" name="mansione" aria-describedby="emailHelp" required>
+                        <select name="mansione"required>
+                            <option> Cuoco </option>   
+                            <option> Fattorino </option>   
+                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Aggiungi</button>

@@ -3,7 +3,6 @@
     <table class="table">
         <thead>
             <tr>
-            <th scope="col">id</th>
             <th scope="col">Nome</th>
             <th scope="col">Cognome</th>
             <th scope="col">Data</th>
@@ -16,7 +15,6 @@
             @foreach($headers as $header)
               @if($header->accettazione == 1)
                 <tr class="my-btn">
-                    <th scope="row">{{$header->id}}</th>
                         <td>{{$header->name}}</td>
                         <td>{{$header->surname}}</td>
                         <td>{{$header->data}}</td>
@@ -54,11 +52,18 @@
                             <!-- <button class="">Pronto</button> -->
                         </td>
                         <td>
-                            <form action="{{route('destroyOrder' , compact('header'))}}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                    <input class="btn btn-danger" type="submit" value="Delete" />
-                            </form>
+                            <div class="d-flex">
+                                <form action="{{route('updateOrder' , compact('header'))}}" method="post">
+                                    @method('put')
+                                    @csrf
+                                        <input class="btn btn-success" type="submit" value="Conferma" />
+                                </form>
+                                <form action="{{route('destroyOrder' , compact('header'))}}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                        <input class="btn btn-danger" type="submit" value="Elimina" />
+                                </form>
+                            </div>
                         </td>
                 </tr>
               @endif

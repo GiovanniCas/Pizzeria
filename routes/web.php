@@ -29,6 +29,7 @@ Route::post('/ordine/submit' , [OrderController::class , "orderSubmit"])->name("
 
 //rotta pagina revisore
 Route::get('/revisore' , [RevisorController::class , "revisor"])->name("revisor");
+Route::put('/conferma/ordine/{header}' , [RevisorController::class , "updateOrder"])->name("updateOrder");
 
 
 //modifica elementi dal carrello
@@ -44,4 +45,6 @@ Route::get('/personale' , [RevisorController::class , "staff"])->name('staff');
 Route::post('/aggiungi/personale' , [RevisorController::class , "addStaff"])->name('addStaff');
 
 
-
+//rotta pagina consegne/fattorino
+Route::get('/fattorino' , [RevisorController::class , "fattorino"])->name('fattorino');
+Route::get('/consegne' , [RevisorController::class , "consegne"])->name('consegne');
