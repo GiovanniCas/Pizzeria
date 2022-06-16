@@ -25,6 +25,8 @@ class User extends Authenticatable
         'mansione',
     ];
 
+    const cuoco = 1;
+    const fattorino = 2;
     /**
      * The attributes that should be hidden for serialization.
      *

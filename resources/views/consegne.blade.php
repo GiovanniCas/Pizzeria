@@ -1,5 +1,5 @@
 <x-layout>
-    Le Tue Consegne:
+    <h1>Ordini Pronti :</h1>
     <table class="table">
         <thead>
             <tr>
@@ -13,25 +13,21 @@
         </thead>
         <tbody>
             
-            @foreach($orders as $order)
-              @if($order->accettazione == 2)
+            @foreach($headers as $header)
+              @if($header->accettazione == 2 && $header->user_id == 1)
                 <tr class="my-btn">
                     
-                    <td>{{$order->name}}</td>
-                    <td>{{$order->surname}}</td>
-                    <td>{{$order->citta}}</td>
-                    <td>{{$order->indirizzo}}</td>
+                    <td>{{$header->name}}</td>
+                    <td>{{$header->surname}}</td>
+                    <td>{{$header->citta}}</td>
+                    <td>{{$header->indirizzo}}</td>
                     <td>
                         <div class="d-flex">
-                            <form action="" method="post">
+                            <form action="{{route('acceptOrder' , compact('header'))}}" method="post">
+                                @method('put')
                                 @csrf
-                                    <input class="btn btn-success" type="submit" value="Consegnato!" />
+                                    <input class="btn btn-success" type="submit" value="Accetta" />
                             </form>
-                            <!-- <form action="" method="post">
-                                @method('DELETE')
-                                @csrf
-                                    <input class="btn btn-danger" type="submit" value="Rifiuta" />
-                            </form> -->
                         </div>
                     </td>
                 </tr>

@@ -48,3 +48,5 @@ Route::post('/aggiungi/personale' , [RevisorController::class , "addStaff"])->na
 //rotta pagina consegne/fattorino
 Route::get('/fattorino' , [RevisorController::class , "fattorino"])->name('fattorino');
 Route::get('/consegne' , [RevisorController::class , "consegne"])->name('consegne');
+Route::put('/accettazione/consegne/{header}' , [RevisorController::class , "acceptOrder"])->name('acceptOrder');
+Route::put('/ordine/consegnato/{header}' , [RevisorController::class , "deliveredOrder"])->name('deliveredOrder');

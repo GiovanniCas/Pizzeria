@@ -22,10 +22,14 @@ class PizzeSeeder extends Seeder
             'category_id' => "1"],
 
             ['name' => "Pizza Prosciutto e Funghi",
-            'description' => "Pizza farcita con pomodoro ,mozzarella, prosciutto e funghi.",
+            'description' => "Pizza farcita con pomodoro, mozzarella, prosciutto e funghi.",
             'price' => "7.00",
-            'category_id' => "1"]
+            'category_id' => "1"],
             
+            ['name' => "CocaCola lattina ",
+            'description' => "Bevanda in lattina.",
+            'price' => "2.00",
+            'category_id' => "2"]
 
         ];
 

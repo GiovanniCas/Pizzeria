@@ -65,7 +65,7 @@ class SelectedController extends Controller
 
     public function updateQuantity(SelectedProduct $prodottoSelezionato){
         
-         return view('modifica', compact('prodottoSelezionato'));
+         return view('modificaCarrello', compact('prodottoSelezionato'));
     }
     
     public function modificaQuantita(Request $request , SelectedProduct $prodottoSelezionato){

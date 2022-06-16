@@ -5,18 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 
 class ProductController extends Controller
 {
 
     public function newProduct(){
+       
+        if (Gate::denies('Gestore')) {
+            return view("welcome")->with("message" , "Non sei Autorizzato ad aggiungere prodotti!");
+        } 
         $categories = Category::all();
         return view("newProduct", compact("categories"));
     }
     public function submitProduct(Request $request){
-        
-        $categories = Category::all();
+
        
+      
+        $categories = Category::all();
         $product = new Product();
         $product->name = $request->input('name');
         $product->description = $request->input('description');
@@ -25,11 +32,15 @@ class ProductController extends Controller
 
         
         $product->save();
+        
         return view("newProduct" , compact('categories')) ;
 
     }
 
     public function formModify(Product $product){
+        if (Gate::denies('Gestore')) {
+            return view("welcome")->with("message" , "Non sei Autorizzato ad aggiungere prodotti!");
+        } 
         $categories = Category::all();
         return view('modificaProdotto', compact('product'))->with(compact('categories'));
     }

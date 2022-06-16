@@ -13,18 +13,19 @@
         </thead>
         <tbody>
             
-            @foreach($orders as $order)
-              @if($order->accettazione == 2)
+            @foreach($headers as $header)
+              @if($header->accettazione == 2 && $header->user_id == Auth::user()->id)
                 <tr class="my-btn">
-                    <td>{{$order->name}}</td>
-                    <td>{{$order->surname}}</td>
-                    <td>{{$order->citta}}</td>
-                    <td>{{$order->indirizzo}}</td>
+                    <td>{{$header->name}}</td>
+                    <td>{{$header->surname}}</td>
+                    <td>{{$header->citta}}</td>
+                    <td>{{$header->indirizzo}}</td>
                     <td>
                         <div class="d-flex">
-                            <form action="" method="post">
+                            <form action="{{route('deliveredOrder' , compact('header'))}}" method="post">
+                                @method('put')
                                 @csrf
-                                    <input class="btn btn-success" type="submit" value="Accetta" />
+                                    <input class="btn btn-success" type="submit" value="Consegnato!" />
                             </form>
                             <!-- <form action="" method="post">
                                 @method('DELETE')

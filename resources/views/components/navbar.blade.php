@@ -20,22 +20,30 @@
           <a class="nav-link" href="{{route('login')}}">LogIn</a>
         </li>
         @else
+        @can('Gestore')
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('pizza')}}">Prodotti</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="{{route('newProduct')}}">Aggiungi Prodotto</a>
-        </li>     
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('revisor')}}">Cuoco</a>
-        </li> 
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('fattorino')}}">Consegne</a>
         </li>   
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('consegne')}}">Le Tue Consegne</a>
-        </li> 
         <li class="nav-item">
           <a class="nav-link" href="{{route('staff')}}">Personale</a>
         </li>
-        <a class="nav-link">{{Auth::user()->name}}</a>
+        @endcan  
+        @can('Gestore' , 'Cuoco')
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('revisor')}}">Cuoco</a>
+        </li>
+        @endcan 
+        @can('Gestore' , 'Fattorino')
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('consegne')}}">Consegne</a>
+        </li>   
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('fattorino')}}">Le Tue Consegne</a>
+        </li> 
+        @endcan
         <li>
           <a class="nav-link" href="{{ route('logout') }}"onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
         </li>
@@ -44,6 +52,7 @@
             </form>
   
       </ul>
+      
     </div>
   </div>
   @endguest
