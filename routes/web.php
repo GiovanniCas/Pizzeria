@@ -14,6 +14,14 @@ Route::get('/pizze', [PublicController::class , "pizza"])->name("pizza");
 Route::get('/carrello', [PublicController::class , "cart"])->name("cart");
 Route::get('/form/prodotto', [ProductController::class , "newProduct"])->name("newProduct");
 
+//rotte per categorie 
+Route::get('/aggiungi/categoria' , [PublicController::class , "addCategory"])->name('addCategory');
+Route::post('/aggiungi/nuova/categoria' , [PublicController::class , "addNewCategory"])->name('addNewCategory');
+Route::get('/modifica/{category}' , [PublicController::class , "modifyCategory"])->name('modifyCategory');
+Route::put('/modifica/categoria/{category}' , [PublicController::class , "modifyNewCategory"])->name('modifyNewCategory');
+Route::delete('/elimina/categoria/{category}' , [PublicController::class , "deleteCategory"])->name('deleteCategory');
+
+
 //ricerca prodotto
 Route::post('/search' , [ProductController::class , "search"])->name('search');
 Route::post('/cerca/utente' , [RevisorController::class , "searchUser"])->name('searchUser');

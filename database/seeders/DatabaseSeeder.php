@@ -22,14 +22,25 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $categories= [
-            ['name' => 'Pizze'],
-            ['name' => 'Bevande'],
-            ['name' => 'Dessert'],
+            [
+            'name' => 'Pizze',
+            'description' => 'Prova le pizze migliori al mondo'
+            ],
+           
+            [
+            'name' => 'Bevande',
+            'description' => 'Tutti i tipi di bevanda'
+            ],
+            [
+            'name' => 'Dessert',
+            'description' => 'Deseert di tutti i tipi'
+            ],
         ];
 
         foreach($categories as $category){
             DB::table("categories")->insert([
-                'name'=> $category['name']
+                'name'=> $category['name'],
+                'description'=> $category['description']
             ]);
         }
         
