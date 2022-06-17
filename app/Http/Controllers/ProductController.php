@@ -73,9 +73,7 @@ class ProductController extends Controller
         } elseif((is_null($search)) && (!is_null($category))){
             $products = Product::where('category_id', $category)->get();
         }
-        else {
-            $products = Product::where('name','LIKE','%'.$search.'%')->where('category_id', $category)->get();
-        }
+        
 
         return view('pizza' , compact('products'))->with(compact('categories'));
     }

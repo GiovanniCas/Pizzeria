@@ -1,11 +1,11 @@
 <x-layout>
 <div class="container-fluid d-flex">
             <div>
-                <form method="post" action="{{route('search')}}"class="d-flex">
+                <form method="post" action="{{route('searchUser')}}"class="d-flex">
                     @csrf
                     <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
 
-                    <label for="exampleInputCategory" class="form-label">Categoria</label>
+                    <label for="exampleInputCategory" class="form-label">Mansione</label>
                     <select name="mansione">
                         @foreach($users as $user)
                         <option value="{{$user->mansione}}">
@@ -37,10 +37,10 @@
                     <td>{{$user->mansione}}</td>
                     <td>
                         <div class="d-flex">
-                            <form action="" method="get">
+                            <form action="{{route('updateUtente' , compact('user'))}}" method="get">
                                 <button  class="btn btn-info" >Modifica</button>
                             </form>
-                            <form action="" method="post">
+                            <form action="{{route('deleteUser' , compact('user'))}}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button  class="btn btn-danger" >Elimina</button>

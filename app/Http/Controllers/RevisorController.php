@@ -45,7 +45,7 @@ class RevisorController extends Controller
 
     public function fattorino(){
         if (Gate::denies('Fattorino') && Gate::denies('Gestore')) {
-            return view("welcome")->with("message" , "Non sei Autorizzato ");
+            abort(403);
         } 
         $headers = Header::all();
         return view('fattorino' , compact('headers'));
@@ -60,7 +60,7 @@ class RevisorController extends Controller
 
     public function consegne(){
         if (Gate::denies('Fattorino') && Gate::denies('Gestore')) {
-            return view("welcome")->with("message" , "Non sei Autorizzato ");
+            abort(403);
         } 
         $headers = Header::all();
         return view('consegne' , compact('headers'));
@@ -81,5 +81,47 @@ class RevisorController extends Controller
     public function utenti(){
         $users = User::all();
         return view('utenti', compact('users'));
+    }
+
+    public function updateUtente(User $user){
+        return view('modificaUtente' , compact('user'));
+    }
+
+    public function updateUser(User $user , Request $request){
+    
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->mansione = $request->mansione;
+        $user->save();
+
+        return redirect(route('utenti'));
+
+    }
+
+    public function deleteUser(User $user ){
+
+        $user->delete();
+        return redirect(route('utenti'));
+    }
+
+    public function searchUser(Request $request){
+        $users = User::all();
+        $search = $request->search;
+        $mansione = $request->mansione;
+        
+        
+
+        if((!is_null($search)) && (is_null($mansione))){
+            
+            $users = User::where('name','LIKE','%'.$search.'%')->get();
+
+        } elseif((is_null($search)) && (!is_null($mansione))){
+            $users = User::where('mansione', $mansione)->get();
+        }
+        
+
+        return view('utenti' , compact('users'));
     }
 }

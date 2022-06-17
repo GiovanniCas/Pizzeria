@@ -16,6 +16,7 @@ Route::get('/form/prodotto', [ProductController::class , "newProduct"])->name("n
 
 //ricerca prodotto
 Route::post('/search' , [ProductController::class , "search"])->name('search');
+Route::post('/cerca/utente' , [RevisorController::class , "searchUser"])->name('searchUser');
 
 
 //rotta per inserimento nuovo prodotto
@@ -50,6 +51,11 @@ Route::delete('/elimina/prodotto/{header}' , [OrderController::class , "destroyO
 Route::get('/utenti' , [RevisorController::class , "utenti"])->name('utenti');
 Route::get('/personale' , [RevisorController::class , "staff"])->name('staff');
 Route::post('/aggiungi/personale' , [RevisorController::class , "addStaff"])->name('addStaff');
+
+//modifica ed eliminazione utente
+Route::get('/modifica/user/{user}' , [RevisorController::class , "updateUtente"])->name('updateUtente');
+Route::put('/modifica/utente/{user}' , [RevisorController::class , "updateUser"])->name('updateUser');
+Route::delete('/elimina/utente/{user}' , [RevisorController::class , "deleteUser"])->name('deleteUser');
 
 
 //rotta pagina consegne/fattorino
