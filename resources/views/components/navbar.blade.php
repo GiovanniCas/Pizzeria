@@ -25,25 +25,22 @@
           <a class="nav-link" href="{{route('pizza')}}">Prodotti</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{route('newProduct')}}">Aggiungi Prodotto</a>
-        </li>   
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('staff')}}">Personale</a>
+          <a class="nav-link" href="{{route('utenti')}}">Utenti</a>
         </li>
         @endcan  
-        @can('Gestore' , 'Cuoco')
+        @if('Gestore' && 'Cuoco')
         <li class="nav-item">
           <a class="nav-link" href="{{route('revisor')}}">Cuoco</a>
         </li>
-        @endcan 
-        @can('Gestore' , 'Fattorino')
+        @endif 
+        @if('Fattorino' && 'Gestore')
         <li class="nav-item">
           <a class="nav-link" href="{{route('consegne')}}">Consegne</a>
         </li>   
         <li class="nav-item">
           <a class="nav-link" href="{{route('fattorino')}}">Le Tue Consegne</a>
         </li> 
-        @endcan
+        @endif
         <li>
           <a class="nav-link" href="{{ route('logout') }}"onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
         </li>

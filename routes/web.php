@@ -14,11 +14,17 @@ Route::get('/pizze', [PublicController::class , "pizza"])->name("pizza");
 Route::get('/carrello', [PublicController::class , "cart"])->name("cart");
 Route::get('/form/prodotto', [ProductController::class , "newProduct"])->name("newProduct");
 
+//ricerca prodotto
+Route::post('/search' , [ProductController::class , "search"])->name('search');
 
-//rotta per inserimento e per modifica nuovo prodotto
+
+//rotta per inserimento nuovo prodotto
 Route::post('/form/prodotto/submit' , [ProductController::class , "submitProduct"])->name("submitProduct");
+
+//rotte per modifica ed eliminazione prodotti
 Route::get('/form/modifica/{product}' , [ProductController::class , "formModify"])->name("formModify");
 Route::put('/form/modifica/submit/{product}' , [ProductController::class , "modifyProduct"])->name("modifyProduct");
+Route::delete('/elimina/prodotto/{product}' , [ProductController::class , "deleteProduct"])->name("deleteProduct");
 
 //rotta per aggiungere al carrello
 Route::post('/aggiungialcarrello' , [SelectedController::class , "addCart"])->name("addCart");
@@ -41,6 +47,7 @@ Route::put('/modifica/ordine/{prodottoSelezionato}' , [SelectedController::class
 Route::delete('/elimina/prodotto/{header}' , [OrderController::class , "destroyOrder"])->name("destroyOrder");
 
 //creazione personale
+Route::get('/utenti' , [RevisorController::class , "utenti"])->name('utenti');
 Route::get('/personale' , [RevisorController::class , "staff"])->name('staff');
 Route::post('/aggiungi/personale' , [RevisorController::class , "addStaff"])->name('addStaff');
 

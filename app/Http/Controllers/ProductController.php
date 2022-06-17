@@ -19,10 +19,9 @@ class ProductController extends Controller
         $categories = Category::all();
         return view("newProduct", compact("categories"));
     }
-    public function submitProduct(Request $request){
 
+    public function submitProduct(Request $request){
        
-      
         $categories = Category::all();
         $product = new Product();
         $product->name = $request->input('name');
@@ -30,7 +29,6 @@ class ProductController extends Controller
         $product->price = $request->input('price');
         $product->category_id = $request->input('category_id');
 
-        
         $product->save();
         
         return view("newProduct" , compact('categories')) ;
@@ -54,5 +52,31 @@ class ProductController extends Controller
         $product->save();
   
         return redirect(route('pizza'));
+    }
+
+    public function deleteProduct(Product $product){
+        $product->delete();
+    
+        return redirect(route('pizza'));
+    }
+
+    public function search(Request $request){
+        $categories = Category::all();
+        $search = $request->search;
+        $category = $request->category_id;
+        
+
+        if((!is_null($search)) && (is_null($category))){
+            
+            $products = Product::where('name','LIKE','%'.$search.'%')->get();
+
+        } elseif((is_null($search)) && (!is_null($category))){
+            $products = Product::where('category_id', $category)->get();
+        }
+        else {
+            $products = Product::where('name','LIKE','%'.$search.'%')->where('category_id', $category)->get();
+        }
+
+        return view('pizza' , compact('products'))->with(compact('categories'));
     }
 }

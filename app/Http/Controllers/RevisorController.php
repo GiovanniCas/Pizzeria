@@ -77,4 +77,9 @@ class RevisorController extends Controller
         $header->save();
         return redirect(route('fattorino'));
     }
+
+    public function utenti(){
+        $users = User::all();
+        return view('utenti', compact('users'));
+    }
 }

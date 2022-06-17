@@ -1,0 +1,40 @@
+
+Amministratore:
+    Lista prodotti: deve essere una tabella, paginata, con filtri di ricerca per nome e per categoria. Manca cancellazione
+    Categorie: manca lista e crud. Non servono i filtri
+    Aggiungi prodotto: levarlo dal menu, metterlo nella schermata lista prodotti
+    Utenti: manca lista tab paginata con filtri ricerca per nome e per tipo utente
+    Personale: levarlo damenu e diventa un pulsante "nuovo" o Crea o Agguingi a alenco utenti
+    Ordini: mettere voce ordini nella navbar che funzionerà cosi':
+        - lista paginata degli ordini, di default escono solo gli ordini non ancora consegnate
+        - filtri per stato ordine (tendina con i vari stati dell'ordine) e per nome cliente
+    
+
+Utente cuoco:
+ - Ha la lista prodotti ma in sola lettura
+ - Idem categorie
+ - Non ha Utenti
+ - Ordini: vede solo quelli da cuocere e ha il pulsante per indicare che è pronto. Validazione come sotto per il fattorino
+
+
+Utente fattorino:
+ - Ha la lista prodotti ma in sola lettura
+ - Idem categorie
+ - Non ha Utenti
+ - Ordini: vede solo quelli cotti che hanno "user_id" a NULL oppure al proprio ID e può prendere in carico la consegna. Accanto ad ogni ordine ci sarà il tasto "Prendi in carico" o "Consegnato" a seconda dei casi.  Validazione: non si può prendere in carico un ordine già preso in carico da qualcun altro. Non si può consegnare un ordine già consegnate
+
+---------------------------------------
+Gestione di 1 foto per categoria, e usarle nel sito
+
+Gestione di N foto per le pizze, e usarle nell'elenco prodotti lato utente finale
+
+Tendine filtro già esistenti: permettere la scelta multipla sia in html standard sia tramite Select2 (js)
+
+Schermata calendario mensile che riporta gli ordini di ogni giorno.
+
+Scrivere i programmi di test
+
+-----------------------------------------
+
+
+ 

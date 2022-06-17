@@ -38,5 +38,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('Fattorino', function ($user) {
             return $user->mansione === "Fattorino";
         });
+
     }
 }

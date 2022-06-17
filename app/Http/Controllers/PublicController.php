@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\SelectedProduct;
 use Illuminate\Support\Facades\DB;
@@ -15,9 +16,9 @@ class PublicController extends Controller
 
     public function pizza(){
       
-        $products = Product::all();
-    
-        return view("pizza" , compact('products'));
+        $products = Product::orderBy('name' , 'asc')->paginate(4);
+        $categories = Category::all();
+        return view("pizza" , compact('products'))->with(compact('categories'));
     }
 
     public function cart(){
