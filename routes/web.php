@@ -25,6 +25,10 @@ Route::delete('/elimina/categoria/{category}' , [PublicController::class , "dele
 //ricerca prodotto
 Route::post('/search' , [ProductController::class , "search"])->name('search');
 Route::post('/cerca/utente' , [RevisorController::class , "searchUser"])->name('searchUser');
+Route::post('/cerca/ordine' , [RevisorController::class , "searchOrder"])->name('searchOrder');
+
+//rorra per lista ordini
+Route::get('/ordini' , [RevisorController::class , "orderList"])->name('orderList');
 
 
 //rotta per inserimento nuovo prodotto

@@ -6,12 +6,11 @@
                     <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
 
                     <label for="exampleInputCategory" class="form-label">Mansione</label>
-                    <select name="mansione">
-                        @foreach($users as $user)
-                        <option value="{{$user->mansione}}">
-                            {{$user->mansione}}
-                        </option>   
-                        @endforeach
+                    <select  name="mansione" >
+                        <option value="Tutte">Tutte</option>   
+                        <option value="Gestore">Gestore</option>   
+                        <option value="Cuoco">Cuoco</option>   
+                        <option value="Fattorino">Fattorino</option>   
                     </select>
                     <button class="btn btn-outline-success my-btn" type="submit">Search</button>
                 </form>

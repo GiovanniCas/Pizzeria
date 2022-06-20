@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\SelectedProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,5 +25,10 @@ class Header extends Model
 
     public function selectedProducts(){
         return $this->hasMany(SelectedProduct::class);
+    }
+
+    
+    public function users(){
+        return $this->hasOne(User::class);
     }
 }

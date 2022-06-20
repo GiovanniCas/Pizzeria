@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Header;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\SelectedProduct;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class RevisorController extends Controller
 {
     public function revisor(){
         if (Gate::denies('Cuoco') && Gate::denies('Gestore')) {
-            return view("welcome")->with("message" , "Non sei Autorizzato ");
+            abort(403);
         } 
         $headers= Header::all()->sortBy('data');
         $prodottiSelezionati = SelectedProduct::all();
@@ -69,7 +70,7 @@ class RevisorController extends Controller
     public function acceptOrder(Header $header ){
         $header->user_id = Auth::user()->id;
         $header->save();
-        return redirect(route('consegne'))->with(compact('header'));
+        return redirect(route('orderList'))->with(compact('header'));
     }
 
     public function deliveredOrder(Header $header){
@@ -113,15 +114,36 @@ class RevisorController extends Controller
         
         
 
-        if((!is_null($search)) && (is_null($mansione))){
-            
+        if((!is_null($search)) && ($mansione == "Tutte")){
             $users = User::where('name','LIKE','%'.$search.'%')->get();
-
-        } elseif((is_null($search)) && (!is_null($mansione))){
+        } elseif((is_null($search)) && ($mansione == "Tutte")){
+            $users = User::all();
+        } else{
             $users = User::where('mansione', $mansione)->get();
         }
         
 
         return view('utenti' , compact('users'));
+    }
+
+    public function orderList(){
+        $prodottiSelezionati = SelectedProduct::all();
+        $orders = Header::all(); //->where('accetazione' , '<', 3);
+        return view('listaOrdini' , compact('orders'))->with(compact('prodottiSelezionati'));
+    }
+
+    public function searchOrder(Request $request){
+        $orders = Header::all();
+        $search = $request->search;
+        $accettazione = $request->accettazione;
+
+        if((!is_null($search)) && ( $accettazione == "Tutti")){
+            $orders = Header::where('name','LIKE','%'.$search.'%')->get();
+        } elseif((is_null($search)) && ( $accettazione == "Tutti")){
+            $orders = Header::all();    
+        }else {
+            $orders = Header::where('accettazione', $accettazione)->get();
+        }
+        return view('listaOrdini' , compact('orders'));
     }
 }

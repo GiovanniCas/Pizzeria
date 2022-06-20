@@ -24,23 +24,29 @@ class DatabaseSeeder extends Seeder
         $categories= [
             [
             'name' => 'Pizze',
-            'description' => 'Prova le pizze migliori al mondo'
+            'description' => 'Prova le pizze migliori al mondo',
+            'img' => 'null',
             ],
            
             [
             'name' => 'Bevande',
-            'description' => 'Tutti i tipi di bevanda'
+            'description' => 'Tutti i tipi di bevanda',
+            'img' => 'null',
+
             ],
             [
             'name' => 'Dessert',
-            'description' => 'Deseert di tutti i tipi'
+            'description' => 'Deseert di tutti i tipi',
+            'img' => 'null'
+
             ],
         ];
 
         foreach($categories as $category){
             DB::table("categories")->insert([
                 'name'=> $category['name'],
-                'description'=> $category['description']
+                'description'=> $category['description'],
+                'img'=> $category['img']
             ]);
         }
         

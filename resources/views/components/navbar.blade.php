@@ -20,23 +20,23 @@
           <a class="nav-link" href="{{route('login')}}">LogIn</a>
         </li>
         @else
-        @can('Gestore')
         <li class="nav-item">
           <a class="nav-link" href="{{route('pizza')}}">Prodotti</a>
         </li>
+        @can('Gestore')
         <li class="nav-item">
           <a class="nav-link" href="{{route('utenti')}}">Utenti</a>
         </li>
         @endcan  
-        @if('Gestore' && 'Cuoco')
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('orderList')}}">Ordini</a>
+        </li>
+        <!-- @can('Cuoco' || 'Gestore')
         <li class="nav-item">
           <a class="nav-link" href="{{route('revisor')}}">Cuoco</a>
         </li>
-        @endif 
-        @if('Fattorino' && 'Gestore')
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('consegne')}}">Consegne</a>
-        </li>   
+        @endcan -->
+        @can('Fattorino') 
         <li class="nav-item">
           <a class="nav-link" href="{{route('fattorino')}}">Le Tue Consegne</a>
         </li> 

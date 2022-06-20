@@ -8,7 +8,7 @@
     <div class="container d-flex justify-content-around my-5">
         @foreach($categories as $category)
             <div class="card mt-5" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="...">
+                <img src="{{Storage::url($category->img)}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{$category->name}}</h5>
                     <p class="card-text">{{$category->description}}</p>

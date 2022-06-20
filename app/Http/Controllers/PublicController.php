@@ -41,6 +41,7 @@ class PublicController extends Controller
     public function addNewCategory(Request $request){
         $category = new Category();
         $category->name = $request->input('name');
+        $category->img = $request->file('img')->store('public/img');
         $category->description = $request->input('description');
     
         $category->save();
@@ -55,6 +56,8 @@ class PublicController extends Controller
     public function modifyNewCategory(Category $category , Request $request){
         $category->name = $request->name;
         $category->description = $request->description;
+        $category->img = $request->file('img')->store('public/img');
+        
         $category->save();
         return redirect(route('welcome'));
     }

@@ -66,11 +66,13 @@ class ProductController extends Controller
         $category = $request->category_id;
         
 
-        if((!is_null($search)) && (is_null($category))){
+        if((!is_null($search)) && ($category == 'Tutte')){
             
             $products = Product::where('name','LIKE','%'.$search.'%')->get();
 
-        } elseif((is_null($search)) && (!is_null($category))){
+        } elseif((is_null($search)) && ($category == 'Tutte')){
+            $products = Product::all();
+        }else {
             $products = Product::where('category_id', $category)->get();
         }
         

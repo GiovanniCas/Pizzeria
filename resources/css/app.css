@@ -1,2 +1,5 @@
 @import"~bootstrap/dist/css/bootstrap";
+
+@import"~dropzone/dist/basic";
+@import"~dropzone/dist/dropzone";
 /* @import '~jquery-ui/themes/base/all.css'; */
