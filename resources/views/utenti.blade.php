@@ -1,17 +1,26 @@
 <x-layout>
+
 <div class="container-fluid d-flex">
             <div>
                 <form method="post" action="{{route('searchUser')}}"class="d-flex">
                     @csrf
                     <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
 
-                    <label for="exampleInputCategory" class="form-label">Mansione</label>
-                    <select  name="mansione" >
-                        <option value="Tutte">Tutte</option>   
-                        <option value="Gestore">Gestore</option>   
-                        <option value="Cuoco">Cuoco</option>   
-                        <option value="Fattorino">Fattorino</option>   
-                    </select>
+                    <!-- <label for="exampleInputCategory" class="form-label">Mansione</label> -->
+                   
+                  
+                    
+                        
+
+                            <select  name="mansione[]" class="js-example-basic-multiple" multiple="multiple" style="width: 100%;" placeholder="ciao">
+                                <option value="Tutte">Tutte</option>   
+                                <option value="Gestore">Gestore</option>   
+                                <option value="Cuoco">Cuoco</option>   
+                                <option value="Fattorino">Fattorino</option>   
+                            </select> 
+                            
+                    
+                
                     <button class="btn btn-outline-success my-btn" type="submit">Search</button>
                 </form>
             </div>
@@ -52,4 +61,10 @@
     </table>
      
     <a href="{{route('staff')}}" class="btn btn-danger" >Aggiungi Utente</a>
+    <!-- <script src="{{Config::get('app.url')}}/node_modules/select2/dist/js/select2.min.js"></script> -->
+    <script type="text/javascript">
+       $('.js-example-basic-multiple').select2();
+    </script>
+  
 </x-layout>
+

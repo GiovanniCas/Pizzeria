@@ -10,7 +10,7 @@ use App\Http\Controllers\SelectedController;
 
 
 Route::get('/', [PublicController::class , "welcome"])->name("welcome");
-Route::get('/pizze', [PublicController::class , "pizza"])->name("pizza");
+Route::get('/prodotti', [PublicController::class , "pizza"])->name("pizza");
 Route::get('/carrello', [PublicController::class , "cart"])->name("cart");
 Route::get('/form/prodotto', [ProductController::class , "newProduct"])->name("newProduct");
 
@@ -75,3 +75,8 @@ Route::get('/fattorino' , [RevisorController::class , "fattorino"])->name('fatto
 Route::get('/consegne' , [RevisorController::class , "consegne"])->name('consegne');
 Route::put('/accettazione/consegne/{header}' , [RevisorController::class , "acceptOrder"])->name('acceptOrder');
 Route::put('/ordine/consegnato/{header}' , [RevisorController::class , "deliveredOrder"])->name('deliveredOrder');
+
+//rotta immagini
+Route::get('/immagini', [ProductController::class, 'getImages'])->name('getImages');
+Route::post('/images/upload' , [ProductController::class , "uploadImages"])->name('uploadImages');
+Route::delete('/images/remove', [ProductController::class, 'removeImages'])->name('removeImages');

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class ProductController extends Controller
@@ -21,7 +25,7 @@ class ProductController extends Controller
     }
 
     public function submitProduct(Request $request){
-       
+        
         $categories = Category::all();
         $product = new Product();
         $product->name = $request->input('name');
@@ -30,9 +34,11 @@ class ProductController extends Controller
         $product->category_id = $request->input('category_id');
 
         $product->save();
+        $id = $product->id;
+        session()->put('product_id', $id);
         
-        return view("newProduct" , compact('categories')) ;
-
+        //return view("newProduct" , compact('categories')) ;
+        return view("addImg");
     }
 
     public function formModify(Product $product){
@@ -61,7 +67,9 @@ class ProductController extends Controller
     }
 
     public function search(Request $request){
-        $categories = Category::all();
+
+        // $images = Image::all();
+        // $categories = Category::all();
         $search = $request->search;
         $category = $request->category_id;
         
@@ -75,8 +83,86 @@ class ProductController extends Controller
         }else {
             $products = Product::where('category_id', $category)->get();
         }
-        
+        session()->put('products', $products);
+        // $products =  session('products');
 
-        return view('pizza' , compact('products'))->with(compact('categories'));
+        return redirect(route('pizza'));//->with(compact('products'));//->with(compact('categories'))->with(compact('images'));
     }
+
+    public function getImages(){
+        return view('addImg');
+    }
+
+    public function uploadImages(Request $request){
+        $categories = Category::all();
+        
+       
+        foreach($request->file('images') as $image)
+        {
+            $filename = $image->getClientOriginalName();
+            $destinationPath = 'storage/img/';
+            $image->move($destinationPath, $filename);
+            $image = new Image();
+            $image->product_id = session()->get('product_id');
+            $image->img = $filename;
+            $image->save();
+            
+        }
+        //dd($image);
+      
+
+
+        // $images = $request->file(['images']);
+        // foreach($images as $image){
+        //     $image = new Image();
+        //     $image->product_id = session()->get('product_id');
+        //     $filename = $image->getClientOriginalName();
+        //     dd($filename);
+        //     $image->img = $image;
+
+        //     dd($image);
+
+
+        //     $newFileName = "img/{$image->img}";
+
+        //     $image->img = $newFileName;
+
+        //     Storage::move($image, $newFileName);
+            
+        //     $image->save();
+        // };
+
+    
+        return view('welcome' )->with(compact('categories'));
+
+
+
+        
+        //     $input = Input::all();
+	// 	$rules = array(
+	// 	    'file' => 'image|max:3000',
+	// 	);
+
+	// 	$validation = Validator::make($input, $rules);
+
+	// 	if ($validation->fails())
+	// 	{
+	// 		return Response::make($validation->errors->first(), 400);
+	// 	}
+
+	// 	$file = Input::file('file');
+
+    //     $extension = File::extension($file['name']);
+    //     $directory = path('public').'uploads/'.sha1(time());
+    //     $filename = sha1(time().time()).".{$extension}";
+
+    //     $upload_success = Input::upload('file', $directory, $filename);
+
+    //     if( $upload_success ) {
+    //     	return Response::json('success', 200);
+    //     } else {
+    //     	return Response::json('error', 400);
+    //     }
+	}
+       
 }

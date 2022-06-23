@@ -1,7 +1,34 @@
 <x-layout>
 
     <h1>I nostri prodotti :</h1>
-    
+    <!-- <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    @foreach($images as $img)
+        @if($img->product_id === 11)
+            <div class="carousel-item active"> -->
+        
+            <!-- <img src="{{ asset('storage/$img->img') }}" class="d-block w-100" alt="..."> -->
+            <!-- <img src="/storage/img/{{$img->img}}" class="d-block w-100" alt="...">
+        
+            </div>
+        @endif
+    @endforeach   
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div> -->
+
     
     @guest
         <form method="POST" action="{{route('addCart')}}">
@@ -9,6 +36,19 @@
         @foreach($products as $product)
         <div class="card" style="width: 18rem;">
                     <div class="card-body">
+                        <div class="swiper mySwiper">
+                            <div class="swiper-wrapper">
+                                    @foreach($images as $img)
+                                        @if($img->product_id === $product->id)
+                                        <div class="swiper-slide"><img src="/storage/img/{{$img->img}}" class="d-block w-100" alt="..."></div>
+                                        
+                                        @endif
+                                    @endforeach   
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-pagination"></div>
+                        </div>
                         <h5 class="card-title">{{$product->name}}</h5>
                         <p class="card-text">{{$product->description}}</p>
                         <p class="card-text">{{$product->price}} $</p>
@@ -80,8 +120,10 @@
         <!-- rianggiungere i links -->
 
         @can('Gestore')   
+       
             <a href="{{route('newProduct')}}" class="btn btn-danger" >Aggiungi Prodotto</a>
         @endcan
     @endguest
     
+
 </x-layout>

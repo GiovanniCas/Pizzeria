@@ -139,8 +139,8 @@
         <tbody>
             
             @foreach($orders as $header)
-              @if($header->accettazione === 2)
-                @if($header->user_id == 1) 
+              @if($header->accettazione === 2 )
+               
                 <!-- || $header->user_id == Auth::user()->id -->
                     <tr class="my-btn">
                         
@@ -150,16 +150,25 @@
                         <td>{{$header->indirizzo}}</td>
                         <td>
                             <div class="d-flex">
-                                <form action="{{route('acceptOrder' , compact('header'))}}" method="post">
+                                @if($header->user_id == 1 ) 
+                                    <form action="{{route('acceptOrder' , compact('header'))}}" method="post">
+                                        @method('put')
+                                        @csrf
+                                            <input class="btn btn-success" type="submit" value="Accetta" />
+                                    </form>
+                                @endif
+                                @if($header->user_id == Auth::user()->id )
+                                    <form action="{{route('deliveredOrder' , compact('header'))}}" method="post">
                                     @method('put')
                                     @csrf
-                                        <input class="btn btn-success" type="submit" value="Accetta" />
-                                </form>
+                                        <input class="btn btn-success" type="submit" value="Consegnato!" />
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
                 @endif    
-              @endif
+             
             @endforeach
         </tbody>
     </table>  

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -17,9 +18,16 @@ class PublicController extends Controller
 
     public function pizza(){
       
-        $products = Product::orderBy('name' , 'asc')->paginate(4);
+        $images = Image::all();
+        
+        if(empty(session('products'))){
+            $products = Product::all();
+        }else{
+            $products = session('products');
+        }
+
         $categories = Category::all();
-        return view("pizza" , compact('products'))->with(compact('categories'));
+        return view("pizza" , compact('products'))->with(compact('categories'))->with(compact('images'));
     }
 
     public function cart(){

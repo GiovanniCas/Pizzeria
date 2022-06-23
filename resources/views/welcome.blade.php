@@ -20,7 +20,7 @@
                             <form action="{{route('deleteCategory' , compact('category'))}}" method="post">
                                 @method('DELETE')
                                 @csrf
-                                <button  class="btn btn-danger" >Elimina</button>
+                                <button  class="btn btn-danger">Elimina</button>
                             </form>
                         @endcan
                     </div>
@@ -29,6 +29,9 @@
         @endforeach
     </div>
     @can('Gestore')
+        
         <a href="{{route('addCategory')}}" class="btn btn-danger mt-5">Nuova Categoria </a>
     @endcan
+
+    
 </x-layout>

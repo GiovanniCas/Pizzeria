@@ -1,6 +1,10 @@
 import 'bootstrap';
+import $ from 'jquery';
+window.$ = window.jQuery = $;
 
-window.Dropzone = required('dropzone');
+
+
+document.Dropzone = require('dropzone');
 Dropzone.autoDiscover = false;
 
 import './mio';

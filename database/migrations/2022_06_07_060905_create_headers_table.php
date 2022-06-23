@@ -37,7 +37,7 @@ return new class extends Migration
      */
     public function down()
     {
-       
+        $table->dropForeign(["user_id"]);
         Schema::dropIfExists('headers');
     }
 };

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SelectedProduct;
@@ -25,5 +26,9 @@ class Product extends Model
 
     public function selectedProducts(){
         return $this->hasMany(SelectedProduct::class);
+    }
+
+    public function images(){
+        return $this->hasMany(Image::class);
     }
 }

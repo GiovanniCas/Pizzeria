@@ -36,11 +36,11 @@
           <a class="nav-link" href="{{route('revisor')}}">Cuoco</a>
         </li>
         @endcan -->
-        @can('Fattorino') 
+        <!-- @can('Fattorino') 
         <li class="nav-item">
           <a class="nav-link" href="{{route('fattorino')}}">Le Tue Consegne</a>
         </li> 
-        @endif
+        @endif -->
         <li>
           <a class="nav-link" href="{{ route('logout') }}"onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
         </li>

@@ -44,13 +44,13 @@ class RevisorController extends Controller
         return redirect(route('staff'));
     }
 
-    public function fattorino(){
-        if (Gate::denies('Fattorino') && Gate::denies('Gestore')) {
-            abort(403);
-        } 
-        $headers = Header::all();
-        return view('fattorino' , compact('headers'));
-    }
+    // public function fattorino(){
+    //     if (Gate::denies('Fattorino') && Gate::denies('Gestore')) {
+    //         abort(403);
+    //     } 
+    //     $headers = Header::all();
+    //     return view('fattorino' , compact('headers'));
+    // }
 
     public function updateOrder(Header $header){
       
@@ -59,13 +59,13 @@ class RevisorController extends Controller
         return redirect(route('revisor'));
     }
 
-    public function consegne(){
-        if (Gate::denies('Fattorino') && Gate::denies('Gestore')) {
-            abort(403);
-        } 
-        $headers = Header::all();
-        return view('consegne' , compact('headers'));
-    }
+    // public function consegne(){
+    //     if (Gate::denies('Fattorino') && Gate::denies('Gestore')) {
+    //         abort(403);
+    //     } 
+    //     $headers = Header::all();
+    //     return view('consegne' , compact('headers'));
+    // }
 
     public function acceptOrder(Header $header ){
         $header->user_id = Auth::user()->id;
@@ -76,11 +76,21 @@ class RevisorController extends Controller
     public function deliveredOrder(Header $header){
         $header->accettazione = 3;
         $header->save();
+        //
         return redirect(route('fattorino'));
     }
 
     public function utenti(){
-        $users = User::all();
+        
+        //$users = User::all();
+        if(empty(session('users'))){
+            $users = User::all();
+        }else{
+            $users = session('users');
+        }
+        
+        session()->forget('users');
+
         return view('utenti', compact('users'));
     }
 
@@ -108,32 +118,53 @@ class RevisorController extends Controller
     }
 
     public function searchUser(Request $request){
-        $users = User::all();
+        
         $search = $request->search;
         $mansione = $request->mansione;
         
-        
+        $q = User::query();
 
-        if((!is_null($search)) && ($mansione == "Tutte")){
-            $users = User::where('name','LIKE','%'.$search.'%')->get();
-        } elseif((is_null($search)) && ($mansione == "Tutte")){
-            $users = User::all();
-        } else{
-            $users = User::where('mansione', $mansione)->get();
+        if($search){
+            $q = $q->where('name','LIKE','%'.$search.'%');
         }
-        
 
-        return view('utenti' , compact('users'));
+
+        if($mansione){
+            foreach($mansione as $m){
+             
+                if($m === "Tutte"){
+                    $q = $q->where('mansione' , '<>' , 'Tutte');
+                } else{
+                //select * from utenti where name LIKE "%seqarch%" AND ( 
+                $q = $q->where('name','LIKE','%'.$search.'%')
+                    ->where('mansione', $m)
+                    ->orWhere('mansione', $m);
+                }
+            }  
+        }
+    
+        $q = $q->get();
+        
+        session()->put('users', $q);
+
+        return redirect(route('utenti'));
     }
 
     public function orderList(){
+
         $prodottiSelezionati = SelectedProduct::all();
-        $orders = Header::all(); //->where('accetazione' , '<', 3);
+        
+        if(empty(session('orders'))){
+            $orders = Header::all();
+        }else{
+            $orders = session('orders');
+        }
+
         return view('listaOrdini' , compact('orders'))->with(compact('prodottiSelezionati'));
     }
 
     public function searchOrder(Request $request){
-        $orders = Header::all();
+        
         $search = $request->search;
         $accettazione = $request->accettazione;
 
@@ -144,6 +175,8 @@ class RevisorController extends Controller
         }else {
             $orders = Header::where('accettazione', $accettazione)->get();
         }
-        return view('listaOrdini' , compact('orders'));
+
+        session()->put('orders', $orders);
+        return redirect(route('listaOrdini'));
     }
 }
