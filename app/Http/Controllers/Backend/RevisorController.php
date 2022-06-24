@@ -1,43 +1,46 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
 use App\Models\User;
 use App\Models\Header;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\SelectedProduct;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 
 class RevisorController extends Controller
 {
-    public function revisor(){
-        if (Gate::denies('Cuoco') && Gate::denies('Gestore')) {
-            abort(403);
-        } 
-        $headers= Header::all()->sortBy('data');
-        $prodottiSelezionati = SelectedProduct::all();
+    // public function revisor(){
+    //     if (Gate::denies('Cuoco') && Gate::denies('Gestore')) {
+    //         abort(403);
+    //     } 
+    //     $headers= Header::all()->sortBy('data');
+    //     $prodottiSelezionati = SelectedProduct::all();
       
-        return view("revisore", compact('headers'))->with(compact('prodottiSelezionati'));
-    }
+    //     return view("revisore", compact('headers'))->with(compact('prodottiSelezionati'));
+    // }
 
     public function staff(){
         if (Gate::denies('Gestore')) {
             abort(403);
             //return view("welcome")->with("message" , "Non sei Autorizzato ad aggiungere prodotti!");
-        } 
+        }      
         return view('staff');
     }
 
     public function addStaff(Request $request){
+        
         $user = new User();
         $user->name = $request->input('name');
         $user->surname = $request->input('surname');
         $user->email = $request->input('email');
-        $user->password = $request->input('password');
-        $user->mansione = $request->input('mansione');
+        $user->password = Hash::make($request->input('password'));
+        $user->ruolo = $request->input('ruolo');
 
         $user->save();
     
@@ -56,7 +59,7 @@ class RevisorController extends Controller
       
         $header->accettazione = 2;
         $header->save();
-        return redirect(route('revisor'));
+        return redirect(route('orderList'));
     }
 
     // public function consegne(){
@@ -67,6 +70,7 @@ class RevisorController extends Controller
     //     return view('consegne' , compact('headers'));
     // }
 
+    //fattorino che accetta
     public function acceptOrder(Header $header ){
         $header->user_id = Auth::user()->id;
         $header->save();
@@ -77,12 +81,11 @@ class RevisorController extends Controller
         $header->accettazione = 3;
         $header->save();
         //
-        return redirect(route('fattorino'));
+        return redirect(route('orderList'));  //prima c'era fattorino
     }
 
     public function utenti(){
         
-        //$users = User::all();
         if(empty(session('users'))){
             $users = User::all();
         }else{
@@ -120,25 +123,25 @@ class RevisorController extends Controller
     public function searchUser(Request $request){
         
         $search = $request->search;
-        $mansione = $request->mansione;
-        
+        $ruolo = $request->ruolo;
+        session()->put('searchUser' , $search);
+        session()->put('ruolo' , $ruolo);
         $q = User::query();
 
         if($search){
             $q = $q->where('name','LIKE','%'.$search.'%');
         }
 
-
-        if($mansione){
-            foreach($mansione as $m){
+        if($ruolo){
+            foreach($ruolo as $m){
              
                 if($m === "Tutte"){
-                    $q = $q->where('mansione' , '<>' , 'Tutte');
+                    $q = $q->where('ruolo' , '<>' , 'Tutte');
                 } else{
                 //select * from utenti where name LIKE "%seqarch%" AND ( 
                 $q = $q->where('name','LIKE','%'.$search.'%')
-                    ->where('mansione', $m)
-                    ->orWhere('mansione', $m);
+                    ->where('ruolo', $m)
+                    ->orWhere('ruolo', $m);
                 }
             }  
         }
@@ -151,7 +154,7 @@ class RevisorController extends Controller
     }
 
     public function orderList(){
-
+     
         $prodottiSelezionati = SelectedProduct::all();
         
         if(empty(session('orders'))){
@@ -164,19 +167,41 @@ class RevisorController extends Controller
     }
 
     public function searchOrder(Request $request){
-        
+       
         $search = $request->search;
         $accettazione = $request->accettazione;
+        session()->put('searchOrder' , $search);
+        session()->put('accettazione' , $accettazione);
+        $q = Header::query();
 
-        if((!is_null($search)) && ( $accettazione == "Tutti")){
-            $orders = Header::where('name','LIKE','%'.$search.'%')->get();
-        } elseif((is_null($search)) && ( $accettazione == "Tutti")){
-            $orders = Header::all();    
-        }else {
-            $orders = Header::where('accettazione', $accettazione)->get();
+        if($search){
+            $q = $q->where('name','LIKE','%'.$search.'%');
         }
 
-        session()->put('orders', $orders);
-        return redirect(route('listaOrdini'));
+        if($accettazione){
+            foreach($accettazione as $m){
+             
+                if($m === "Tutte"){
+                    $q = $q->where('accettazione' , '<>' , 'Tutte');
+                } else{
+                //select * from utenti where name LIKE "%seqarch%" AND ( 
+                $q = $q->where('name','LIKE','%'.$search.'%')
+                    ->where('accettazione', $m)
+                    ->orWhere('accettazione', $m);
+                }
+            }  
+        }
+    
+        $q = $q->get();
+        
+        session()->put('orders', $q);
+        return redirect(route('orderList'));
+    }
+
+    public function destroyOrder(Header $header)
+    {
+        $header->delete();
+    
+        return redirect(route("revisor"));
     }
 }

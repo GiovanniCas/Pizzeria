@@ -32,6 +32,7 @@ return new class extends Migration
     public function down()
     {
         $table->dropForeign(["category_id"]);
+        
         Schema::dropIfExists('products');
     }
 };

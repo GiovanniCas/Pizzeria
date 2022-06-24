@@ -10,6 +10,7 @@ Amministratore:
         - filtri per stato ordine (tendina con i vari stati dell'ordine) e per nome cliente
     
 
+
 Utente cuoco:
  - Ha la lista prodotti ma in sola lettura
  - Idem categorie
@@ -36,5 +37,18 @@ Scrivere i programmi di test
 
 -----------------------------------------
 
+PHP: costanti
 
+- cambiare mansione da varchar a int  (migrazione di modifica campo, da fare preservando i dati esistenti)
+- aggiungere costanti al modello User per le varie mansioni
+- adattare i gate esistenti 
  
+- Route groups e riorganizzare le rotte
+ in modo che tutta la parte gestionale sia sotto /admin/ 
+ e che la parte utente rimanga con le rottte sotto /
+
+- lato admin, tutta la gestione dei prodotto deve succedere dal controller dei prodotti
+
+
+
+

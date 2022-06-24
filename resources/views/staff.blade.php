@@ -28,9 +28,9 @@
 
                     <div class="mb-3">
                         <label for="exampleInputMansione" class="form-label">Mansione</label>
-                        <select name="mansione"required>
-                            <option> Cuoco </option>   
-                            <option> Fattorino </option>   
+                        <select name="ruolo"required>
+                            <option value ="2"> Cuoco </option>   
+                            <option value ="3"> Fattorino </option>   
                         </select>
                     </div>
 

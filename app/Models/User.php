@@ -23,8 +23,15 @@ class User extends Authenticatable
         'surname',
         'email',
         'password',
-        'mansione',
+        'ruolo',
     ];
+
+   
+
+    const GESTORE = 1;
+    const CUOCO = 2;
+    const FATTORINO = 3;
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -45,7 +52,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function hesders(){
+    public function headers(){
         return $this->belongsTo(Header::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -27,16 +28,20 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        
         Gate::define('Gestore', function ($user) {
-            return $user->mansione === "Gestore";
+            
+            return $user->ruolo === User::GESTORE;
         });
         
         Gate::define('Cuoco', function ($user) {
-            return $user->mansione === "Cuoco";
+
+            return $user->ruolo === User::CUOCO;
         });
 
         Gate::define('Fattorino', function ($user) {
-            return $user->mansione === "Fattorino";
+            
+            return $user->ruolo === User::FATTORINO;
         });
 
     }

@@ -1,3 +1,7 @@
+@php
+    use App\Models\Header;
+@endphp
+
 <x-layout>
 
 <!-- tabella per gestore -->
@@ -7,24 +11,40 @@
             <div>
                 <form method="post" action="{{route('searchOrder')}}"class="d-flex">
                     @csrf
-                    <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
+                    @if(session('searchOrder'))
+                        <input class="form-control me-2" type="search" placeholder="{{session()->get('searchOrder')}}" aria-label="Search" name="search">
+                        @else
+                        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
+                    @endif 
 
                     <label for="exampleInputCategory" class="form-label">Stato Accettazione</label>
-                    <select name="accettazione[]" multiple>
-                        <!-- c era il foreach -->
-                        <option value="Tutti"> Tutti </option>  
-                        <option value="1"> 1 </option>  
-                        <option value="2"> 2 </option>  
-                        <option value="3"> 3 </option>  
+                    <select name="accettazione[]" multiple class="my-accettazione" style="width: 100%;">
+                        <option value="Tutte"> Tutti </option>  
+                        <option value="{{Header::PREPARAZIONE}}"> In Preparazione</option>  
+                        <option value="{{Header::IN_CONSEGNA}}"> In Consegna </option>  
+                        <option value="{{Header::CONSEGNATO}}"> Consegnato </option>  
                     </select>
                     <button class="btn btn-outline-success my-btn" type="submit">Search</button>
                 </form>
             </div>
         </div>
+        @if(session('accettazione'))
+            <div class="d-flex mt-3" >
+                <h5> Filtri Attivi : </h5>
+                @foreach(session('accettazione') as $m)
+                    @if($m == Header::PREPARAZIONE)
+                        <h6 class="mx-3"> In Preparazione</h6>
+                    @elseif($m == Header::IN_CONSEGNA)
+                        <h6 class="mx-3">In Consegna</h6>
+                    @elseif($m == Header::CONSEGNATO)    
+                        <h6 class="mx-3">Consegnato</h6>
+                    @endif
+                @endforeach
+            </div>
+        @endif
         <table class="table">
         <thead>
             <tr>
-            <th scope="col">Fattorino</th>
             <th scope="col">Nome</th>
             <th scope="col">Cognome</th>
             <th scope="col">Citta</th>
@@ -36,13 +56,17 @@
             @foreach($orders as $order)
                
                     <tr>
-                        <td>{{$order->user_id}}</td>
                         <td>{{$order->name}}</td>
                         <td>{{$order->surname}}</td>
                         <td>{{$order->citta}}</td>
-                        <td>{{$order->accettazione}}</td>
-                    </tr>
-                
+                        @if($order->accettazione == Header::PREPARAZIONE)
+                            <td>In Preparazione</td>
+                        @elseif($order->accettazione == Header::IN_CONSEGNA)
+                            <td>In Consegna</td>
+                        @elseif($order->accettazione == Header::CONSEGNATO)    
+                            <td>Consegnato</td>
+                        @endif
+                    </tr>    
             @endforeach
         </tbody>
     </table>
@@ -64,7 +88,7 @@
         <tbody>
             
             @foreach($orders as $header)
-              @if($header->accettazione == 1)
+              @if($header->accettazione == Header::PREPARAZIONE)
                 <tr class="my-btn">
                         <td>{{$header->name}}</td>
                         <td>{{$header->surname}}</td>
@@ -139,7 +163,7 @@
         <tbody>
             
             @foreach($orders as $header)
-              @if($header->accettazione === 2 )
+              @if($header->accettazione === Header::IN_CONSEGNA )
                
                 <!-- || $header->user_id == Auth::user()->id -->
                     <tr class="my-btn">
@@ -173,5 +197,7 @@
         </tbody>
     </table>  
     @endcan
-   
+    <script type="text/javascript">
+       $('.my-accettazione').select2();
+    </script>
 </x-layout>
