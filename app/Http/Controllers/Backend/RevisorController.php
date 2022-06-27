@@ -86,7 +86,7 @@ class RevisorController extends Controller
             $q = User::query();
 
             if($search){
-                $q = $q->where('name','LIKE','%'.$search.'%');
+                $q = $q->where('name','LIKE','%'.$search.'%')->paginate(4);
             }
     
             if($ruolo){
@@ -100,9 +100,10 @@ class RevisorController extends Controller
                         ->where('ruolo', $m)
                         ->orWhere('ruolo', $m);
                     }
-                }  
+                } 
+
             }
-        
+            
             $q = $q->paginate(4);
             $users = $q;
         }
@@ -150,8 +151,14 @@ class RevisorController extends Controller
         //$prodottiSelezionati = SelectedProduct::all();
         
         if(empty(session('searchOrder')) && empty(session('accettazione'))){
-            $orders = Header::paginate(5);
-        }else{
+            $orders = Header::where('user_id' , User::GESTORE)
+                    ->orWhere('user_id' , Auth::user()->id) 
+                    ->where('accettazione' , Header::IN_CONSEGNA) 
+                    ->paginate(4);
+            
+        }
+        
+        else{
             $search = session('searchOrder');
             $accettazione = session('accettazione');
             $q = Header::query();
@@ -172,8 +179,7 @@ class RevisorController extends Controller
                     }
                 }  
             }
-        
-            $q = $q->paginate(5);
+            $q = $q->paginate(4);
             $orders = $q;
         }
 
