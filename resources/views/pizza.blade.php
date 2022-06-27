@@ -28,6 +28,7 @@
                     </div>
                 </div>
             @endforeach
+            {{$products->links()}}
             <button type="submit" class="btn btn-primary mt-3">Aggiungi al carrello</button>
         </form>
         @else
@@ -54,9 +55,16 @@
         </div>
         @if(session('category'))
             <div class="d-flex mt-3" >
-                <h5> Filtri Attivi : </h5>
+                <h5> Filtra per : </h5>
                 @foreach(session('category') as $m)
-                    <h6 class="mx-3">{{$m}}</h> 
+                    @foreach($categories as $category)
+                        @if($category->id == $m)
+                            <h5 class="mx-3">{{$category->name}}</h5> 
+                        @endif
+                    @endforeach
+                    @if($m == "Tutte")
+                        <h5 class="mx-3">Tutte</h5>
+                    @endif
                 @endforeach
             </div>
         @endif
@@ -77,7 +85,11 @@
                 @foreach($products as $product)
                     <tr data-id="{{$product->id}}">
                         <td data-value="{{$product->name}}">{{$product->name}}</td>
-                        <td data-value="{{$product->category_id}}">{{$product->category_id}}</td>
+                        @foreach($categories as $category)
+                            @if($category->id === $product->category_id)
+                                <td data-value="{{$product->category_id}}">{{$category->name}}</td>
+                            @endif
+                        @endforeach
                         <td data-value="{{$product->description}}">{{$product->description}}</td>
                         <td data-value="{{$product->price}}">$ {{$product->price}}</td>
                         @can('Gestore')
@@ -98,14 +110,14 @@
                 @endforeach
             </tbody>
         </table>
-      
-        <!-- rianggiungere i links -->
-        
+   
         @can('Gestore')   
         
-            <a href="{{route('newProduct')}}" class="btn btn-danger" >Aggiungi Prodotto</a>
+        {{$products->links() }}
+        <a href="{{route('newProduct')}}" class="btn btn-danger" >Aggiungi Prodotto</a>
         @endcan
     @endguest
+   
    
    
     <script type="text/javascript">

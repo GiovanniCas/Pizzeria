@@ -82,12 +82,9 @@
             @endforeach
         </tbody>
     </table>
-     
+    {{$users->links() }}
     <a href="{{route('staff')}}" class="btn btn-danger" >Aggiungi Utente</a>
-    <a href="{{route('aggiorna')}}" class="btn btn-success" >Aggiorna</a>
-  
 
-    <!-- <script src="{{Config::get('app.url')}}/node_modules/select2/dist/js/select2.min.js"></script> -->
     <script type="text/javascript">
        $('.js-example-basic-multiple').select2();
     </script>

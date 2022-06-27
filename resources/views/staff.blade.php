@@ -1,3 +1,6 @@
+@php
+    use App\Models\User;
+@endphp
 <x-layout>
     
     <div class="container mt-5">
@@ -29,8 +32,8 @@
                     <div class="mb-3">
                         <label for="exampleInputMansione" class="form-label">Mansione</label>
                         <select name="ruolo"required>
-                            <option value ="2"> Cuoco </option>   
-                            <option value ="3"> Fattorino </option>   
+                            <option value ="{{User::CUOCO}}"> Cuoco </option>   
+                            <option value ="{{User::FATTORINO}}"> Fattorino </option>   
                         </select>
                     </div>
 

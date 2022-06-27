@@ -59,11 +59,11 @@ Route::prefix('admin')->group(function () {
     Route::delete('/elimina/categoria/{category}' , [ProductController::class , "deleteCategory"])->name('deleteCategory');
 
     //rotta pagina revisore
-    Route::get('/revisore' , [RevisorController::class , "revisor"])->name("revisor");
+    // Route::get('/revisore' , [RevisorController::class , "revisor"])->name("revisor");
     Route::put('/conferma/ordine/{header}' , [RevisorController::class , "updateOrder"])->name("updateOrder");
 
     //eliminazione ordini da parte del revisore
-    Route::delete('/elimina/prodotto/{header}' , [RevisorController::class , "destroyOrder"])->name("destroyOrder");
+    Route::delete('/elimina/ordine/{header}' , [RevisorController::class , "destroyOrder"])->name("destroyOrder");
 
     //rotta per lista ordini
     Route::get('/ordini' , [RevisorController::class , "orderList"])->name('orderList');
@@ -78,6 +78,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/modifica/user/{user}' , [RevisorController::class , "updateUtente"])->name('updateUtente');
     Route::put('/modifica/utente/{user}' , [RevisorController::class , "updateUser"])->name('updateUser');
     Route::delete('/elimina/utente/{user}' , [RevisorController::class , "deleteUser"])->name('deleteUser');
+    Route::put('/accettazione/consegne/{header}' , [RevisorController::class , "acceptOrder"])->name('acceptOrder');
+    Route::put('/ordine/consegnato/{header}' , [RevisorController::class , "deliveredOrder"])->name('deliveredOrder');
 
     
 });
@@ -89,5 +91,4 @@ Route::prefix('fattorino')->group(function () {
     Route::get('/consegne' , [RevisorController::class , "consegne"])->name('consegne');
     Route::put('/accettazione/consegne/{header}' , [RevisorController::class , "acceptOrder"])->name('acceptOrder');
     Route::put('/ordine/consegnato/{header}' , [RevisorController::class , "deliveredOrder"])->name('deliveredOrder');
-
 });

@@ -17,16 +17,39 @@ class ProductController extends Controller
 {
     public function pizza(){
       
-        $images = Image::all();
         
-        if(empty(session('products'))){
-            $products = Product::all();
+        $images = Image::all();
+        if(empty(session('searchProduct')) && empty(session('category'))){
+            $products = Product::paginate(4);
         }else{
-            $products = session('products');
+            $q = Product::query();
+            $search = session('searchProduct');
+            $category = session('category');
 
-                // $products =  $products::paginate(4);
+            if($search){
+                $q = $q->where('name','LIKE','%'.$search.'%');
+            }
+    
+            if($category){
+                foreach($category as $cat){
+                 
+                    if($cat === "Tutte"){
+                        $q = $q->where('category_id' , '<>' , 'Tutte');
+                    } else{
+                    
+                    $q = $q->where('name','LIKE','%'.$search.'%')
+                        ->where('category_id', $cat)
+                        ->orWhere('category_id', $cat);
+                    }
+                }  
+            }
+        
+            $q = $q->paginate(4);
             
+            $products = $q;
+           
         }
+        
         $categories = Category::all();
     
         return view("pizza" , compact('products'))->with(compact('categories'))->with(compact('images'));
@@ -88,36 +111,12 @@ class ProductController extends Controller
 
         $search = $request->search;
         $category = $request->category_id;
-        //dd($category);
         session()->put('searchProduct' , $search);
         session()->put('category' , $category);
-        $q = Product::query();
-
-        if($search){
-            $q = $q->where('name','LIKE','%'.$search.'%');
-        }
-
-        if($category){
-            foreach($category as $cat){
-             
-                if($cat === "Tutte"){
-                    $q = $q->where('category_id' , '<>' , 'Tutte');
-                } else{
-                
-                $q = $q->where('name','LIKE','%'.$search.'%')
-                    ->where('category_id', $cat)
-                    ->orWhere('category_id', $cat);
-                }
-            }  
-        }
-    
-        $q = $q->get();
-        
-        session()->put('products', $q);
 
         return redirect(route('pizza'));
-
     }
+
 
     public function getImages(){
         return view('addImg');

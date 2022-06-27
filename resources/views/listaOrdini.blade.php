@@ -19,6 +19,7 @@
 
                     <label for="exampleInputCategory" class="form-label">Stato Accettazione</label>
                     <select name="accettazione[]" multiple class="my-accettazione" style="width: 100%;">
+
                         <option value="Tutte"> Tutti </option>  
                         <option value="{{Header::PREPARAZIONE}}"> In Preparazione</option>  
                         <option value="{{Header::IN_CONSEGNA}}"> In Consegna </option>  
@@ -163,40 +164,38 @@
         <tbody>
             
             @foreach($orders as $header)
-              @if($header->accettazione === Header::IN_CONSEGNA )
-               
-                <!-- || $header->user_id == Auth::user()->id -->
-                    <tr class="my-btn">
-                        
-                        <td>{{$header->name}}</td>
-                        <td>{{$header->surname}}</td>
-                        <td>{{$header->citta}}</td>
-                        <td>{{$header->indirizzo}}</td>
-                        <td>
-                            <div class="d-flex">
-                                @if($header->user_id == 1 ) 
-                                    <form action="{{route('acceptOrder' , compact('header'))}}" method="post">
+                @if($header->accettazione === Header::IN_CONSEGNA )
+                    @if(($header->user_id === 1) || ($header->user_id == Auth::user()->id))
+                        <tr class="hidden">
+                            <td>{{$header->name}}</td>
+                            <td>{{$header->surname}}</td>
+                            <td>{{$header->citta}}</td>
+                            <td>{{$header->indirizzo}}</td>
+                            <td>
+                                <div class="d-flex">
+                                    @if($header->user_id === 1 ) 
+                                        <form action="{{route('acceptOrder' , compact('header'))}}" method="post">
+                                            @method('put')
+                                            @csrf
+                                                <input class="btn btn-success" type="submit" value="Accetta" />
+                                        </form>
+                                    @else($header->user_id === Auth::user()->id )
+                                        <form action="{{route('deliveredOrder' , compact('header'))}}" method="post">
                                         @method('put')
                                         @csrf
-                                            <input class="btn btn-success" type="submit" value="Accetta" />
-                                    </form>
-                                @endif
-                                @if($header->user_id == Auth::user()->id )
-                                    <form action="{{route('deliveredOrder' , compact('header'))}}" method="post">
-                                    @method('put')
-                                    @csrf
-                                        <input class="btn btn-success" type="submit" value="Consegnato!" />
-                                    </form>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
+                                            <input class="btn btn-success" type="submit" value="Consegnato!" />
+                                        </form>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endif    
                 @endif    
-             
             @endforeach
         </tbody>
     </table>  
     @endcan
+    {{$orders->links() }}
     <script type="text/javascript">
        $('.my-accettazione').select2();
     </script>
