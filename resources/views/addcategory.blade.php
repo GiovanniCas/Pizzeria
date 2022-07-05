@@ -17,7 +17,7 @@
 
                     <div class="mb-3">
                         <label for="exampleInputImg" class="form-label">Immagine :</label>
-                        <input type="file" class="form-control" name="img" aria-describedby="emailHelp" >
+                        <input type="file" class="form-control" name="img" aria-describedby="emailHelp" required>
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Aggiungi</button>

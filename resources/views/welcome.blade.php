@@ -10,7 +10,10 @@
             <div class="card mt-5" style="width: 18rem;">
                 <img src="{{Storage::url($category->img)}}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">{{$category->name}}</h5>
+                    <form href="{{route('categoryView' , compact('category'))}}" method="post"> 
+                        <h5><a href="{{route('categoryView' , compact('category'))}}" class="card-title">{{$category->name}}</a></h5>
+                    </form>
+                    <!-- <h5>{{$category->name}}</h5> -->
                     <p class="card-text">{{$category->description}}</p>
                     <div>
                         @can('Gestore')

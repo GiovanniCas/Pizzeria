@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -18,11 +19,11 @@ return new class extends Migration
             $users = User::all();
             foreach($users as $user){
                 if($user->mansione === "Gestore"){
-                    $user->ruolo = 1;
+                    $user->ruolo = User::GESTORE;
                 }elseif($user->mansione === "Cuoco"){
-                    $user->ruolo = 2;
+                    $user->ruolo = USER::CUOCO;
                 }elseif($user->mansione === "Fattorino"){
-                    $user->ruolo = 3;
+                    $user->ruolo = User::FATTORINO;
                 }
                 $user->save();
             }

@@ -36,26 +36,22 @@ class PublicController extends Controller
         }
         return view('cart' , compact ('prodottiSelezionati'))->with(compact('totale'));
     }
-
+    
     public function addCart(Request $request){
-        
         $quantity = $request->input(['quantity']);
-        
         // mi assicuro che la testata dell'ordine esista altrimenti la creo
-
         if (!session()->has('header_id')) {
             $header = Header::create();
             $id = $header->id;
             session()->put('header_id', $id);
         }
-
+        
         // qui adesso so quale è la testata dell'ordine/carrello  che devo usare per metterci dentro i prodotti scelti
-      
-        foreach ($quantity as $id_prodotto => $quantita_desiderata) {
+        foreach ($quantity as $id_prodotto => $quantita_desiderata){
             // se    quantita_desiderata è valida
             
             if($quantita_desiderata != 0){
-            
+                
                 //controllo esistenza id
                 $checker = SelectedProduct::where('product_id', $id_prodotto)->where('header_id' , session()->get('header_id'))->exists();
                 
@@ -64,11 +60,10 @@ class PublicController extends Controller
                     // se è già a carrello, ne aggiorno la quantità
                     $quantita_desiderata = SelectedProduct::where('product_id' , $id_prodotto)->increment('quantity' , $quantita_desiderata);
                     
-                    
                 } else  {
                     // altrimenti creo la riga di carrello
                     $priceUni= Product::where('id' , $id_prodotto)->value('price');
-                    
+                    //dd($id_prodotto);
                     
                     $prodottoSelezionato = SelectedProduct::create([
                         'product_id' => $id_prodotto,
@@ -79,12 +74,13 @@ class PublicController extends Controller
                     ]);
                     
                     $prodottoSelezionato->save();
+                    //dd($prodottoSelezionato);
                 }       
             };
         }    
         
         $prodottiSelezionati = SelectedProduct::all()->where('header_id', session()->get('header_id'));
-            
+        //dd($prodottiSelezionati);
         return redirect(route('cart'))->with(compact('prodottiSelezionati'));
     }
 
@@ -132,6 +128,12 @@ class PublicController extends Controller
 
         return redirect(route("welcome"))->with("message" , "Grazie per averci scelto, il suo ordine è stato preso in carico!");
 
+    }
+
+    public function categoryView(Category $category){
+        $id = $category->id;
+        session()->put('category_id' , $id);
+        return redirect(route('pizza'));
     }
 
   

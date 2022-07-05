@@ -8,30 +8,31 @@ use App\Http\Controllers\Backend\RevisorController;
 use App\Http\Controllers\SelectedController;
 
 
+// Parte fontend
 
-Route::prefix('/')->group(function (){
+Route::get('/', [PublicController::class , "welcome"])->name("welcome");
+Route::get('/prodotti', [ProductController::class , "pizza"])->name("pizza");
+Route::get('/carrello', [PublicController::class , "cart"])->name("cart");
 
-    Route::get('/', [PublicController::class , "welcome"])->name("welcome");
-    Route::get('/prodotti', [ProductController::class , "pizza"])->name("pizza");
-    Route::get('/carrello', [PublicController::class , "cart"])->name("cart");
-    
-    //rotta per aggiungere al carrello
-    Route::post('/aggiungialcarrello' , [PublicController::class , "addCart"])->name("addCart");
-    
-    //modifica elementi dal carrello
-    Route::get('/update/ordine/{prodottoSelezionato}' , [PublicController::class , "updateQuantity"])->name("updateQuantity");
-    Route::put('/modifica/ordine/{prodottoSelezionato}' , [PublicController::class , "modificaQuantita"])->name("modificaQuantita");
-    
-    //rotta per eseguire l'ordine
-    Route::get('/ordine/form' , [PublicController::class , "orderForm"])->name("orderForm");
-    Route::post('/ordine/submit' , [PublicController::class , "orderSubmit"])->name("orderSubmit");
-});
+//vista per categorie
+Route::get('/categoria/{category}', [PublicController::class , "categoryView"])->name("categoryView");
+
+//rotta per aggiungere al carrello
+Route::post('/aggiungialcarrello' , [PublicController::class , "addCart"])->name("addCart");
+
+//modifica elementi dal carrello
+Route::get('/update/ordine/{prodottoSelezionato}' , [PublicController::class , "updateQuantity"])->name("updateQuantity");
+Route::put('/modifica/ordine/{prodottoSelezionato}' , [PublicController::class , "modificaQuantita"])->name("modificaQuantita");
+
+//rotta per eseguire l'ordine
+Route::get('/ordine/form' , [PublicController::class , "orderForm"])->name("orderForm");
+Route::post('/ordine/submit' , [PublicController::class , "orderSubmit"])->name("orderSubmit");
 
 
 
 //ADMIN
 
-Route::prefix('admin')->group(function () {
+Route::prefix('/admin')->group(function () {
     //aggiunta nuovo prodotto
     Route::get('/form/prodotto', [ProductController::class , "newProduct"])->name("newProduct");
     Route::post('/form/prodotto/submit' , [ProductController::class , "submitProduct"])->name("submitProduct");
@@ -60,6 +61,8 @@ Route::prefix('admin')->group(function () {
 
     //rotta pagina revisore
     // Route::get('/revisore' , [RevisorController::class , "revisor"])->name("revisor");
+    
+    //cuoco
     Route::put('/conferma/ordine/{header}' , [RevisorController::class , "updateOrder"])->name("updateOrder");
 
     //eliminazione ordini da parte del revisore
@@ -72,23 +75,19 @@ Route::prefix('admin')->group(function () {
     Route::get('/utenti' , [RevisorController::class , "utenti"])->name('utenti');
     Route::get('/personale' , [RevisorController::class , "staff"])->name('staff');
     Route::post('/aggiungi/personale' , [RevisorController::class , "addStaff"])->name('addStaff');
-    Route::get('/aggiorna' , [RevisorController::class , "aggiorna"])->name('aggiorna');
+    // Route::get('/aggiorna' , [RevisorController::class , "aggiorna"])->name('aggiorna');
 
     //modifica ed eliminazione utente
     Route::get('/modifica/user/{user}' , [RevisorController::class , "updateUtente"])->name('updateUtente');
     Route::put('/modifica/utente/{user}' , [RevisorController::class , "updateUser"])->name('updateUser');
     Route::delete('/elimina/utente/{user}' , [RevisorController::class , "deleteUser"])->name('deleteUser');
-    Route::put('/accettazione/consegne/{header}' , [RevisorController::class , "acceptOrder"])->name('acceptOrder');
-    Route::put('/ordine/consegnato/{header}' , [RevisorController::class , "deliveredOrder"])->name('deliveredOrder');
 
-    
-});
-
-
-Route::prefix('fattorino')->group(function () {
     //rotta pagina consegne/fattorino
     Route::get('/fattorino' , [RevisorController::class , "fattorino"])->name('fattorino');
-    Route::get('/consegne' , [RevisorController::class , "consegne"])->name('consegne');
+    //Route::get('/consegne' , [RevisorController::class , "consegne"])->name('consegne');
     Route::put('/accettazione/consegne/{header}' , [RevisorController::class , "acceptOrder"])->name('acceptOrder');
     Route::put('/ordine/consegnato/{header}' , [RevisorController::class , "deliveredOrder"])->name('deliveredOrder');
 });
+
+
+

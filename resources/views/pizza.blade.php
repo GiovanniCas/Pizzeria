@@ -1,20 +1,63 @@
 <x-layout>
+    <div class="container-fluid d-flex">
+        <div>
+            <form method="post" action="{{route('search')}}"class="d-flex">
+                @csrf
+                @if(session('searchProduct'))
+                    <input class="form-control me-2" type="search" placeholder="{{session()->get('searchProduct')}}" aria-label="Search" name="search">
+                    @else
+                    <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
+                @endif 
 
+                <label for="exampleInputCategory" class="form-label">Categoria</label>
+                <select name="category_id[]" class="my-cat-id" multiple style="width: 100%;">
+                    <option value="Tutte">Tutte</option>   
+                    @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>   
+                    @endforeach     
+                </select>
+                <button class="btn btn-outline-success my-btn" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
     <h1>I nostri prodotti :</h1>
+    @if(session('category_id'))
+        <div class="d-flex mt-3" >
+            @foreach($categories as $category)
+                @if($category->id === session('category_id'))
+                    <h5 class="mx-3">{{$category->name}}</h5> 
+                @endif
+            @endforeach
+        </div>
+    @endif     
+    @if(session('category'))
+        <div class="d-flex mt-3" >
+            <h5> Filtra per : </h5>
+            @foreach(session('category') as $m)
+                @foreach($categories as $category)
+                    @if($category->id == $m)
+                        <h5 class="mx-3">{{$category->name}}</h5> 
+                    @endif
+                @endforeach
+                @if($m == "Tutte")
+                    <h5 class="mx-3">Tutte</h5>
+                @endif
+            @endforeach
+        </div>
+    @endif
     @guest
         <form method="POST" action="{{route('addCart')}}">
         @csrf
-        @foreach($products as $product)
-        <div class="card" style="width: 18rem;">
+            @foreach($products as $product)
+                <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <div class="swiper mySwiper">
                             <div class="swiper-wrapper">
-                                    @foreach($images as $img)
-                                        @if($img->product_id === $product->id)
+                                @foreach($images as $img)
+                                    @if($img->product_id === $product->id)
                                         <div class="swiper-slide"><img src="/storage/img/{{$img->img}}" class="d-block w-100" alt="..."></div>
-                                        
-                                        @endif
-                                    @endforeach   
+                                    @endif
+                                @endforeach   
                             </div>
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
@@ -32,42 +75,7 @@
             <button type="submit" class="btn btn-primary mt-3">Aggiungi al carrello</button>
         </form>
         @else
-        <div class="container-fluid d-flex">
-            <div>
-                <form method="post" action="{{route('search')}}"class="d-flex">
-                    @csrf
-                    @if(session('searchProduct'))
-                        <input class="form-control me-2" type="search" placeholder="{{session()->get('searchProduct')}}" aria-label="Search" name="search">
-                        @else
-                        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
-                    @endif 
-
-                    <label for="exampleInputCategory" class="form-label">Categoria</label>
-                    <select name="category_id[]" class="my-cat-id" multiple style="width: 100%;">
-                        <option value="Tutte">Tutte</option>   
-                        @foreach($categories as $category)
-                            <option value="{{$category->id}}">{{$category->name}}</option>   
-                        @endforeach     
-                    </select>
-                    <button class="btn btn-outline-success my-btn" type="submit">Search</button>
-                </form>
-            </div>
-        </div>
-        @if(session('category'))
-            <div class="d-flex mt-3" >
-                <h5> Filtra per : </h5>
-                @foreach(session('category') as $m)
-                    @foreach($categories as $category)
-                        @if($category->id == $m)
-                            <h5 class="mx-3">{{$category->name}}</h5> 
-                        @endif
-                    @endforeach
-                    @if($m == "Tutte")
-                        <h5 class="mx-3">Tutte</h5>
-                    @endif
-                @endforeach
-            </div>
-        @endif
+       
         <table class="table">
             <thead>
                 <tr>

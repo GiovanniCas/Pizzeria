@@ -23,19 +23,19 @@ class UserSeeder extends Seeder
             'surname' => "Castagna",
             'email' => "giovanni@giovanni.it",
             'password' => Hash::make('password'),
-            'ruolo' => "1"],
+            'ruolo' => User::GESTORE],
 
             ['name' => "Marco",
             'surname' => "Rossi",
             'email' => "marco@marco.it",
             'password' => Hash::make('password'),
-            'ruolo' => "2"],
+            'ruolo' => User::CUOCO],
 
             ['name' => "Giuseppe",
             'surname' => "Verdi",
             'email' => "giuseppe@giuseppe.it",
             'password' => Hash::make('password'),
-            'ruolo' => "3"],
+            'ruolo' => User::FATTORINO],
         ];
 
         foreach($users as $user){
