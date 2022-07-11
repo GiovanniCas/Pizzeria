@@ -2,7 +2,7 @@
    <form method="POST" action="{{route('modificaQuantita', compact('prodottoSelezionato'))}}">
       @csrf 
       @method('put')
-        <div class="card" style="width: 18rem;">
+        <div class="card" style="width: 18rem;  background-image: url('/sfondo4.jpg')">
             <div class="card-body">
                 <h5 class="card-title"> {{$prodottoSelezionato->products->name}}</h5>
                 <p class="card-text"> Prezzo al pezzo: {{$prodottoSelezionato->price_uni}} $</p>

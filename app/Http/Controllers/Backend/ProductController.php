@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -20,58 +21,115 @@ class ProductController extends Controller
         
         $categories = Category::all();
         $images = Image::all();
-        if(empty(session('searchProduct')) && empty(session('category'))){
-            $products = Product::paginate(4);
-        }
-        if(session('category_id')){
-            $id = session('category_id');
-            $products = Product::all()->where('category_id' , $id)->paginate(4);
+        if(Auth::user()){
+            if(empty(session('searchProduct')) && empty(session('category'))){
+                $products = Product::paginate(7);
+            }
+            if(session('category_id')){
             
-            session()->forget('category_id');
-            
-        }else{
-            $q = Product::query();
-            $search = session('searchProduct');
-            $category = session('category');
-            if(($search) && ($category)){
-                foreach($category as $cat){
-                 
-                    if($cat === "Tutte"){
-                        $q = $q->where('name','LIKE','%'.$search.'%')
-                        ->where('category_id' , '<>' , 'Tutte');
-                    }else{
-                        $q = $q->where('name','LIKE','%'.$search.'%')
-                            ->where('category_id', $cat)
-                            ->where('category_id', $cat);
-                        }
-                    }  
-                }
+                $id = session('category_id');
+                $products = Product::all()->where('category_id' , $id)->paginate(4);
                 
-                if(($search) && (!$category)){
-                    $q = $q->where('name','LIKE','%'.$search.'%');
-                    
-                }
+                session()->forget('category_id');
                 
-                if((!$search) && ($category)){
-                    //dd($category);
+            }else{
                 
+                $q = Product::query();
+                $search = session('searchProduct');
+                $category = session('category');
+                if(($search) && ($category)){
                     foreach($category as $cat){
-                    
+                     
                         if($cat === "Tutte"){
-                            $q = $q->where('category_id' , '<>' , 'Tutte');
-                        } else{
+                            $q = $q->where('name','LIKE','%'.$search.'%')
+                            ->where('category_id' , '<>' , 'Tutte');
+                        }else{
+                            $q = $q->where('name','LIKE','%'.$search.'%')
+                                ->where('category_id', $cat)
+                                ->where('category_id', $cat);
+                            }
+                        }  
+                    }
+                    
+                    if(($search) && (!$category)){
+                        $q = $q->where('name','LIKE','%'.$search.'%');
                         
-                            $q = $q->where('category_id', $cat)
-                                ->orWhere('category_id', $cat);
-                        }
-                    }  
-                }
+                    }
+                    
+                    if((!$search) && ($category)){
+                    
+                        foreach($category as $cat){
+                        
+                            if($cat === "Tutte"){
+                                $q = $q->where('category_id' , '<>' , 'Tutte');
+                            } else{
+                            
+                                $q = $q->where('category_id', $cat)
+                                    ->orWhere('category_id', $cat);
+                            }
+                        }  
+                    }
+                    
+                    
+                    $q = $q->paginate(7);
+                    $products = $q;
+                }    
+
+        }else{
+            if(empty(session('searchProduct')) && empty(session('category'))){
+                $products = Product::paginate(4);
+            }
+            if(session('category_id')){
+            
+                $id = session('category_id');
+                $products = Product::all()->where('category_id' , $id)->paginate(4);
                 
+                session()->forget('category_id');
                 
-                $q = $q->paginate(4);
-                $products = $q;
-               //dd($products);
-            }    
+            }else{
+                
+                $q = Product::query();
+                $search = session('searchProduct');
+                $category = session('category');
+                if(($search) && ($category)){
+                    foreach($category as $cat){
+                     
+                        if($cat === "Tutte"){
+                            $q = $q->where('name','LIKE','%'.$search.'%')
+                            ->where('category_id' , '<>' , 'Tutte');
+                        }else{
+                            $q = $q->where('name','LIKE','%'.$search.'%')
+                                ->where('category_id', $cat)
+                                ->where('category_id', $cat);
+                            }
+                        }  
+                    }
+                    
+                    if(($search) && (!$category)){
+                        $q = $q->where('name','LIKE','%'.$search.'%');
+                        
+                    }
+                    
+                    if((!$search) && ($category)){
+                    
+                        foreach($category as $cat){
+                        
+                            if($cat === "Tutte"){
+                                $q = $q->where('category_id' , '<>' , 'Tutte');
+                            } else{
+                            
+                                $q = $q->where('category_id', $cat)
+                                    ->orWhere('category_id', $cat);
+                            }
+                        }  
+                    }
+                    
+                    
+                    $q = $q->paginate(4);
+                    $products = $q;
+                }    
+
+        }
             
        
         
@@ -81,9 +139,7 @@ class ProductController extends Controller
     public function newProduct(){
         $categories = Category::all();
         if (Gate::denies('Gestore')) {
-            abort(403);
-            //return view("welcome" , compact("categories"))->with("message" , "Non sei Autorizzato ad aggiungere prodotti!");
-            
+            abort(403);            
         } 
         return view("newProduct", compact("categories"));
     }
@@ -92,7 +148,6 @@ class ProductController extends Controller
         if (Gate::denies('Gestore')) {
             abort(403);            
         } 
-        
         $categories = Category::all();
         $product = new Product();
         $product->name = $request->input('name');
@@ -104,29 +159,68 @@ class ProductController extends Controller
         $id = $product->id;
         session()->put('product_id', $id);
         
-        //return view("newProduct" , compact('categories')) ;
-        return view("addImg");
+        $images = $request->file('images');
+        if($images){
+            foreach($images as $image) 
+            {
+                $img = new Image();
+                $img->product_id = $product->id;
+                $img->save();
+                
+                $filename = $img->id.'.img';
+                $img->img = $filename;
+                $img->save();
+
+                $destinationPath = 'storage/img/';
+                $image->move($destinationPath, $filename);
+            }
+            
+        }
+        return redirect(route("welcome"));
     }
 
-    public function formModify(Product $product){
+    public function formModify(Product $product , Image $image){
         $categories = Category::all();
+        $images = Image::where('product_id' , $product->id)->get();
         if (Gate::denies('Gestore')) {
+            abort(403); 
             return view("welcome" , compact("categories"))->with("message" , "Non sei Autorizzato ad aggiungere prodotti!");
         } 
-        return view('modificaProdotto', compact('product'))->with(compact('categories'));
+        return view('modificaProdotto', compact('product'))->with(compact('categories'))->with(compact('images'));
     }
 
-    public function modifyProduct(Request $request , Product $product){
+    public function modifyProduct(Request $request , Product $product ){
         if (Gate::denies('Gestore')) {
             abort(403);            
         } 
+
         $product->name = $request->name;
         $product->description = $request->description;
         $product->price = $request->price;
         $product->category_id = $request->category_id;
-        
         $product->save();
-  
+
+        $images = $request->file('images');
+        ($images);
+        if($images){
+            foreach($images as $image) 
+            {
+                $img = new Image();
+                $img->product_id = $product->id;
+                $img->save();
+                
+                
+                $filename = $img->product_id.'.img';
+                $img->img = $filename;
+                $img->save();
+
+
+                $destinationPath = 'storage/img/';
+                $image->move($destinationPath, $filename);
+            }
+            
+        }
+          
         return redirect(route('pizza'));
     }
 
@@ -139,36 +233,21 @@ class ProductController extends Controller
         return redirect(route('pizza'));
     }
 
+    public function deleteImg(Image $img){
+        if (Gate::denies('Gestore')) {
+            abort(403);            
+        } 
+        $img->delete();
+    
+        return redirect()->back();
+    }
+
     public function search(Request $request){
         $search = $request->search;
         $category = $request->category_id;
-        // dd($category);
         session()->put('searchProduct' , $search);
         session()->put('category' , $category);
         return redirect(route('pizza'));
-    }
-
-
-    public function getImages(){
-        return view('addImg');
-    }
-
-    public function uploadImages(Request $request){
-        $categories = Category::all();
-        
-        if($request->file('images')){
-        foreach($request->file('images') as $image)
-            {
-                $filename = $image->getClientOriginalName();
-                $destinationPath = 'storage/img/';
-                $image->move($destinationPath, $filename);
-                $image = new Image();
-                $image->product_id = session()->get('product_id');
-                $image->img = $filename;
-                $image->save();
-            }
-        }
-        return view('welcome' )->with(compact('categories'));
     }
        
     public function addCategory(){

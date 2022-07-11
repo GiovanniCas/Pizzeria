@@ -32,15 +32,25 @@
                             @endforeach
                         </select>
                     </div>
-
-
-                    <!-- <div class="mb-3">
+                    <div>
                         <label for="exampleInputCategory" class="form-label">Seleziona un immagine</label>
-                        <input type="file" class="form-control" name="category" aria-describedby="emailHelp">
-                    </div> -->
-
+                        <input type="file" class="form-control" name="images[]" placeholder="address" multiple >
+                    </div>
+                    
                     <button type="submit" class="btn btn-primary mt-3">Modifica</button>
                 </form>
+                
+                <p class="mt-3">Immagini presenti:</p>
+                <div class="d-flex">
+                    @foreach($images as $img)
+                    <form action="{{route('deleteImg', compact('img'))}}" method="post">
+                        <button class="btn text-danger">X</button>
+                        @csrf
+                        @method('delete')
+                        <img src="/storage/img/{{$img->img}}" style="height:150px; width: 200px;" alt="">
+                    </form>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>

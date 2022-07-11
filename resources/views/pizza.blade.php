@@ -1,26 +1,32 @@
+@php
+    use App\Models\Image;
+@endphp
 <x-layout>
     <div class="container-fluid d-flex">
-        <div>
+        <div class="mt-3">
             <form method="post" action="{{route('search')}}"class="d-flex">
                 @csrf
-                @if(session('searchProduct'))
-                    <input class="form-control me-2" type="search" placeholder="{{session()->get('searchProduct')}}" aria-label="Search" name="search">
-                    @else
-                    <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
-                @endif 
-
-                <label for="exampleInputCategory" class="form-label">Categoria</label>
-                <select name="category_id[]" class="my-cat-id" multiple style="width: 100%;">
-                    <option value="Tutte">Tutte</option>   
-                    @foreach($categories as $category)
-                        <option value="{{$category->id}}">{{$category->name}}</option>   
-                    @endforeach     
-                </select>
-                <button class="btn btn-outline-success my-btn" type="submit">Search</button>
+                <div>
+                    @if(session('searchProduct'))
+                        <input class="form-control me-2" type="search" placeholder="{{session()->get('searchProduct')}}" aria-label="Search" name="search">
+                        @else
+                        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" style="height: 40px; width: 400px;" name="search">
+                    @endif 
+                </div>
+                <div class="d-flex">
+                    <label for="exampleInputCategory" class="form-label"><h3>Categoria</h3></label>
+                    <select name="category_id[]" class="my-cat-id text-dark my-select" multiple >
+                        <option value="Tutte" class="text-dark">Tutte</option>   
+                        @foreach($categories as $category)
+                            <option value="{{$category->id}}" class="text-black">{{$category->name}}</option>   
+                        @endforeach     
+                    </select>
+                </div>
+                <button class="btn btn-outline-light my-btn" style="height: 40px;" type="submit"><i class="fa-solid fa-magnifying-glass text-white"></i></button>
             </form>
         </div>
     </div>
-    <h1>I nostri prodotti :</h1>
+    <h1 class="mt-3">I nostri prodotti :</h1>
     @if(session('category_id'))
         <div class="d-flex mt-3" >
             @foreach($categories as $category)
@@ -46,49 +52,61 @@
         </div>
     @endif
     @guest
-        <form method="POST" action="{{route('addCart')}}">
-        @csrf
-            @foreach($products as $product)
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <div class="swiper mySwiper">
-                            <div class="swiper-wrapper">
-                                @foreach($images as $img)
-                                    @if($img->product_id === $product->id)
-                                        <div class="swiper-slide"><img src="/storage/img/{{$img->img}}" class="d-block w-100" alt="..."></div>
-                                    @endif
-                                @endforeach   
+    <div class="container text-black mt-5">
+        <div class="row ">
+            <form method="POST" action="{{route('addCart')}}" class="d-flex">
+            @csrf
+                @foreach($products as $product)
+                    <div class="col-md-3">
+                        <div class="card " style="width: 90%; height: 450px; background-image: url('/sfondo4.jpg')">
+                            <div class="card-body text-light">
+                                <div class="swiper mySwiper" style="height: 200px">
+                                    <div class="swiper-wrapper">
+                                        @foreach($images as $img)
+                                            @if($img->product_id === $product->id)
+                                                <div class="swiper-slide"><img src="/storage/img/{{$img->img}}" class="d-block w-100" alt="..."></div>
+                                            @endif
+                                        @endforeach   
+                                    </div>
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                                <h5 class="card-title mt-3">{{$product->name}}</h5>
+                                <p class="card-text" style="height: 50px;">{{$product->description}}</p>
+                                <p class="card-text">{{$product->price}} $</p>
+                                <label for="inputQuantity">Quantita :</label>
+                                <input type="number" min="0" name="quantity[{{$product->id}}]" >
                             </div>
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-pagination"></div>
                         </div>
-                        <h5 class="card-title">{{$product->name}}</h5>
-                        <p class="card-text">{{$product->description}}</p>
-                        <p class="card-text">{{$product->price}} $</p>
-                        <label for="inputQuantity">Quantita :</label>
-                        <input type="number" min="0" name="quantity[{{$product->id}}]" >
+                    </div>
+                @endforeach
+               
+               <div class="row d-flex" style="margin-top: 530px; margin-left: -1309px;">
+                   {{$products->links()}} 
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary mt-3"> Aggiungi al carrello</button>
                     </div>
                 </div>
-            @endforeach
-            {{$products->links()}}
-            <button type="submit" class="btn btn-primary mt-3">Aggiungi al carrello</button>
-        </form>
+            </form>
+        </div>
+    </div>
         @else
        
         <table class="table">
-            <thead>
+            <thead class="text-light">
                 <tr>
                 <th scope="col">Nome </th>
                 <th scope="col">Categoria</th>
                 <th scope="col">Descrizione</th>
+                <th scope="col">Num Immagini</th>
                 <th scope="col">Prezzo</th>
                 @can('Gestore')
                     <th scope="col">Azioni</th>
                 @endcan
                 </tr>
             </thead>
-            <tbody class="table-holder">
+            <tbody class="table-holder text-light">
                 
                 @foreach($products as $product)
                     <tr data-id="{{$product->id}}">
@@ -99,6 +117,7 @@
                             @endif
                         @endforeach
                         <td data-value="{{$product->description}}">{{$product->description}}</td>
+                        <td data-value=""> {{count(Image::all()->where('product_id' , $product->id))}}</td>
                         <td data-value="{{$product->price}}">$ {{$product->price}}</td>
                         @can('Gestore')
                         <td>

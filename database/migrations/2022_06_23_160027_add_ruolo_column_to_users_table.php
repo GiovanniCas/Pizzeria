@@ -16,18 +16,19 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->biginteger('ruolo')->after('mansione')->default(0);
-            $users = User::all();
-            foreach($users as $user){
-                if($user->mansione === "Gestore"){
-                    $user->ruolo = User::GESTORE;
-                }elseif($user->mansione === "Cuoco"){
-                    $user->ruolo = USER::CUOCO;
-                }elseif($user->mansione === "Fattorino"){
-                    $user->ruolo = User::FATTORINO;
-                }
-                $user->save();
-            }
         });
+        $users = User::all();
+        foreach($users as $user){
+            if($user->mansione === "Gestore"){
+                $user->ruolo = User::GESTORE;
+                //dd('ciao');
+            }elseif($user->mansione === "Cuoco"){
+                $user->ruolo = USER::CUOCO;
+            }elseif($user->mansione === "Fattorino"){
+                $user->ruolo = User::FATTORINO;
+            }
+            $user->update(['ruolo' => $user->ruolo]);
+        }
     }
 
     /**

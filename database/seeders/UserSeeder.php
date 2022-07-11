@@ -23,19 +23,19 @@ class UserSeeder extends Seeder
             'surname' => "Castagna",
             'email' => "giovanni@giovanni.it",
             'password' => Hash::make('password'),
-            'ruolo' => User::GESTORE],
+            'mansione' => 'Gestore'],
 
             ['name' => "Marco",
             'surname' => "Rossi",
             'email' => "marco@marco.it",
             'password' => Hash::make('password'),
-            'ruolo' => User::CUOCO],
+            'mansione' => 'Cuoco'],
 
             ['name' => "Giuseppe",
             'surname' => "Verdi",
             'email' => "giuseppe@giuseppe.it",
             'password' => Hash::make('password'),
-            'ruolo' => User::FATTORINO],
+            'mansione' => 'Fattorino'],
         ];
 
         foreach($users as $user){
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 'surname'=> $user['surname'],
                 'email'=> $user['email'],
                 'password'=> $user['password'],
-                'ruolo'=> $user['ruolo'],
+                'mansione'=> $user['mansione'],
             ]);
         }
     }

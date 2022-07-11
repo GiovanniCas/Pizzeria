@@ -115,3 +115,45 @@
   justify-content: center;
   align-items: center;
 }
+
+/* .my-select{
+  height: 40px !important;
+  width: 300px;
+} */
+
+.mio-sfondo{
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
+}
+
+.sfondo-categoria{
+  background-position: center;
+  background-repeat: no-repeat ;
+  background-size: cover;
+}
+
+.select2-container{
+  width: 300px !important;
+  
+  color: black !important;
+}
+
+.select2-selection{
+  height: 40px;
+}
+
+.mia-category{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* .sfondo-prodotto{
+  background-image: url("/sfondo2");
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
+} */

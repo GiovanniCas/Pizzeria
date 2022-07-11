@@ -26,7 +26,7 @@
     <title>Document</title>
     
 </head>
-<body>
+<body style="background-image: url('/sfondo2.webp');" class=" mio-sfondo text-white">
     <x-navbar/>
     
     {{$slot}}

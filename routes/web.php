@@ -46,6 +46,7 @@ Route::prefix('/admin')->group(function () {
     Route::get('/form/modifica/{product}' , [ProductController::class , "formModify"])->name("formModify");
     Route::put('/form/modifica/submit/{product}' , [ProductController::class , "modifyProduct"])->name("modifyProduct");
     Route::delete('/elimina/prodotto/{product}' , [ProductController::class , "deleteProduct"])->name("deleteProduct");
+    Route::delete('/elimina/img/{img}' , [ProductController::class , "deleteImg"])->name("deleteImg");
 
     //ricerca prodotto
     Route::post('/search' , [ProductController::class , "search"])->name('search');
@@ -59,8 +60,9 @@ Route::prefix('/admin')->group(function () {
     Route::put('/modifica/categoria/{category}' , [ProductController::class , "modifyNewCategory"])->name('modifyNewCategory');
     Route::delete('/elimina/categoria/{category}' , [ProductController::class , "deleteCategory"])->name('deleteCategory');
 
-    //rotta pagina revisore
-    // Route::get('/revisore' , [RevisorController::class , "revisor"])->name("revisor");
+    //rotta pagina report
+    Route::get('/report' , [RevisorController::class , "report"])->name('report');
+
     
     //cuoco
     Route::put('/conferma/ordine/{header}' , [RevisorController::class , "updateOrder"])->name("updateOrder");

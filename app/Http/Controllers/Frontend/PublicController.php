@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\SelectedProduct;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
@@ -37,11 +38,21 @@ class PublicController extends Controller
         return view('cart' , compact ('prodottiSelezionati'))->with(compact('totale'));
     }
     
-    public function addCart(Request $request){
+    /**
+     *  sezione per aggiunger prodotti al carrello,
+     *  per prima cosa se non esiste creo una testate e la metto in sessione;
+     *  prendo solo i prodotti che hanno selezionata una quantità maggiore di 0;
+     *  se il prodotto esiste già nel carrello, la quantita viene aumentata del valore selezionato
+     *  altrimenti il prodotto viene aggiunto normalmente.
+     */
+
+    public function addCart(Request $request) {
+
         $quantity = $request->input(['quantity']);
+        
         // mi assicuro che la testata dell'ordine esista altrimenti la creo
         if (!session()->has('header_id')) {
-            $header = Header::create();
+            $header = Header::create(['user_id' => User::GESTORE]);
             $id = $header->id;
             session()->put('header_id', $id);
         }
@@ -50,8 +61,7 @@ class PublicController extends Controller
         foreach ($quantity as $id_prodotto => $quantita_desiderata){
             // se    quantita_desiderata è valida
             
-            if($quantita_desiderata != 0){
-                
+            if($quantita_desiderata != 0) {
                 //controllo esistenza id
                 $checker = SelectedProduct::where('product_id', $id_prodotto)->where('header_id' , session()->get('header_id'))->exists();
                 
@@ -63,7 +73,6 @@ class PublicController extends Controller
                 } else  {
                     // altrimenti creo la riga di carrello
                     $priceUni= Product::where('id' , $id_prodotto)->value('price');
-                    //dd($id_prodotto);
                     
                     $prodottoSelezionato = SelectedProduct::create([
                         'product_id' => $id_prodotto,
@@ -74,34 +83,70 @@ class PublicController extends Controller
                     ]);
                     
                     $prodottoSelezionato->save();
-                    //dd($prodottoSelezionato);
                 }       
             };
         }    
         
         $prodottiSelezionati = SelectedProduct::all()->where('header_id', session()->get('header_id'));
-        //dd($prodottiSelezionati);
+
         return redirect(route('cart'))->with(compact('prodottiSelezionati'));
     }
 
-    public function updateQuantity(SelectedProduct $prodottoSelezionato){
+    // public function updateQuantity(SelectedProduct $prodottoSelezionato){
         
-         return view('modificaCarrello', compact('prodottoSelezionato'));
-    }
+    //      return view('modificaCarrello', compact('prodottoSelezionato'));
+    // }
     
-    public function modificaQuantita(Request $request , SelectedProduct $prodottoSelezionato){
-        $prodottoSelezionato->quantity = $request->quantity;
+    public function modificaQuantita(Request $request ){
+        $quantities = $request->input(['quantity']);
+        //dd($quantities);
+        foreach($quantities as $id_prodottoSelezionato => $nuova_quantita){
+            $prodottoSelezionato = SelectedProduct::where('id' , $id_prodottoSelezionato)->where('header_id' , session('header_id'))->update(['quantity' => $nuova_quantita]);
+            //dd($prodottoSelezionato->id);
+                // if($prodottoSelezionato->quantity = 0){
+                //     $prodottoSelezionato->remove();               
+                // }
+            
+        }
+        $prodottiSelezionati = SelectedProduct::all()->where('header_id', session('header_id'));//->where('quantity', 0);
+        //dd('ciao');
+        foreach( $prodottiSelezionati as $prodottoSelezionato) {
+            if($prodottoSelezionato->quantity === 0){
+                $prodottoSelezionato->delete();
+            }
+        }
 
-        $prodottoSelezionato->save();
-  
-        return redirect(route('cart'));
+        $prodottiSelezionati = SelectedProduct::all()->where('header_id', session('header_id'));//->where('quantity', 0);
+
+        // dd(count($prodottiSelezionati)) ;
+        if(count($prodottiSelezionati) > 0) {
+            return view("orderForm");
+        } else {
+            return redirect(route('welcome'));
+            
+        }
     }
 
-    public function orderForm(){
+    public function orderForm(Request $request){
+        // $prodottiSelezionati = SelectedProduct::all()->where('header_id', session('header_id'))->where('quantity' , 0);
+        // if(count($prodottiSelezionati) != 0) {
+        //     return redirect(route("orderForm"))->with(compact('prodottiSelezionati'));
+        // } else {
+        //     return redirect(route('welcome'));
+
+        // }
         return view("orderForm");
     }
 
     public function orderSubmit(Request $request ){
+        $prodottiSelezionati = SelectedProduct::all()->where('header_id' , session()->get('header_id'));
+              
+        $totale = 0;
+        foreach($prodottiSelezionati as $prodottoSelezionato){
+            $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
+            $totale += $tot;
+            
+        }
         
         $order = Header::where('id' , session()->get('header_id'))->update([
         'name' => $request->input('name'),
@@ -113,6 +158,7 @@ class PublicController extends Controller
         'data' => $request->input('data'),
         'time' => $request->input('time'),
         'accettazione' => 1,
+        'tot' => $totale,
         ]);  
         
 

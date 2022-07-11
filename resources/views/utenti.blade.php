@@ -2,31 +2,34 @@
     use App\Models\User;
 @endphp
 <x-layout>
-<div class="container-fluid d-flex">
-            <div>
+<div class="container-fluid d-flex ">
+            <div class="mt-3">
                 <form method="post" action="{{route('searchUser')}}"class="d-flex">
                     @csrf
+                    <div>
                         @if(session('searchUser'))
                             <input class="form-control me-2" type="search" placeholder="{{session()->get('searchUser')}}" aria-label="Search" name="search">
                             @else
-                            <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search">
+                            <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search"  style="height: 40px; width: 400px;" name="search">
                         @endif 
-                    <div class="d-flex">
-                        <h5>Mansione:</h5>
                     </div>
-                    <select  name="ruolo[]" class="js-example-basic-multiple" multiple="multiple" style="width: 100%;">
-                        <option value="0">Tutte</option>   
-                        <option value="{{User::GESTORE}}">Gestore</option>   
-                        <option value="{{User::CUOCO}}">Cuoco</option>   
-                        <option value="{{User::FATTORINO}}">Fattorino</option>   
-                    </select> 
+                    <div class="d-flex">
+                    <label for="exampleInputCategory" class="form-label"><h3>Mansione:</h3></label>                        <select  name="ruolo[]" class="js-example-basic-multiple  my-select" multiple="multiple" style="width: 100%;">
+                            <option value="0">Tutte</option>   
+                            <option value="{{User::GESTORE}}">Gestore</option>   
+                            <option value="{{User::CUOCO}}">Cuoco</option>   
+                            <option value="{{User::FATTORINO}}">Fattorino</option>   
+                        </select> 
+                    </div>
                     
                     
                     
-                    <button class="btn btn-outline-success my-btn" type="submit">Cerca</button>
+                    <button class="btn btn-outline-light my-btn" type="submit" style="height: 40px;"><i class="fa-solid fa-magnifying-glass text-white"></i></button>
                 </form>
             </div>
         </div>   
+    <h1 class="mt-3">Lista Utenti :</h1>
+
         @if(session('ruolo'))
             <div class="d-flex mt-3" >
                 <h5> Filtri Attivi : </h5>
@@ -41,7 +44,7 @@
                 @endforeach
             </div>
         @endif
-        <table class="table">
+        <table class="table text-light">
         <thead>
             <tr>
             <th scope="col">Nome </th>

@@ -27,6 +27,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{{route('utenti')}}">Utenti</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('report')}}">Report</a>
+        </li>
         @endcan  
         <li class="nav-item">
           <a class="nav-link" href="{{route('orderList')}}">Ordini</a>

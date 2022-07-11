@@ -33,7 +33,9 @@
                             @endforeach
                         </select>
                     </div>
-
+                    
+                     <input type="file" class="form-control" name="images[]" placeholder="address" multiple> 
+                <!-- <button type="submit" class="btn btn-primary mt-3">Avanti!</button>  -->
                      <!-- <div class="mb-3">
                         <label for="exampleInputCategory" class="form-label">Seleziona un immagine</label>
                         <input type="file" class="form-control" name="category" aria-describedby="emailHelp">
