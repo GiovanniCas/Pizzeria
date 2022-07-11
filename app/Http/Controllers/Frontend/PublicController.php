@@ -147,20 +147,20 @@ class PublicController extends Controller
             $totale += $tot;
             
         }
-        
-        $order = Header::where('id' , session()->get('header_id'))->update([
-        'name' => $request->input('name'),
-        'surname' =>$request->input('surname'),
-        'citta' => $request->input('citta'),
-        'indirizzo' => $request->input('indirizzo'),
-        'cap' => $request->input('cap'),
-        'email' => $request->input('email'),
-        'data' => $request->input('data'),
-        'time' => $request->input('time'),
-        'accettazione' => 1,
-        'tot' => $totale,
+        $order = Header::where('id' , session('header_id'))->update([
+            'name' => $request->input('name'),
+            'surname' =>$request->input('surname'),
+            'citta' => $request->input('citta'),
+            'indirizzo' => $request->input('indirizzo'),
+            'cap' => $request->input('cap'),
+            'email' => $request->input('email'),
+            'data' => $request->input('data'),
+            'time' => $request->input('time'),
+            'accettazione' => 1,
+            'tot' => $totale,
         ]);  
-        
+
+    
 
         $name = $request->input('name');
         $email = $request->input('email');

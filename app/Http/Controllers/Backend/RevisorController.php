@@ -210,8 +210,8 @@ class RevisorController extends Controller
     }
 
     public function report(){
-        
-        // $pippo= Header::groupBy('data')
+      
+        // $ordini= Header::groupBy('data')
         // // ->where('data' ,date('Y-m-d',strtotime("-6 days")))
         // // ->orWhere('data' ,date('Y-m-d',strtotime("-5 days")))
         // // ->orWhere('data' ,date('Y-m-d',strtotime("-4 days")))
@@ -220,7 +220,7 @@ class RevisorController extends Controller
         // // ->orWhere('data' ,date('Y-m-d',strtotime("-1 days")))
         // // ->orWhere('data' ,date('Y-m-d'))
         // ->sum('tot');
-
+        
         $totale = [ 
             $giorno_uno= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-6 days")))->sum('tot'),
             $giorno_due= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-5 days")))->sum('tot'),
@@ -231,6 +231,8 @@ class RevisorController extends Controller
             $giorno_sette= Header::groupBy('data')->where('data' ,date('Y-m-d'))->sum('tot'),
         ];
         
+        //dd($totale);
+
         $date= [
             date('Y-m-d',strtotime("-6 days")) ,
             date('Y-m-d',strtotime("-5 days")) ,
