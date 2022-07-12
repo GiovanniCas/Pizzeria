@@ -76,7 +76,7 @@ class FilterTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
         ]);
         $header = Header::factory()->create([
             'user_id' => $user->id,
@@ -88,7 +88,7 @@ class FilterTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
         ]);
 
         $response = $this->post(route('searchOrder' , ['search' => 'pao']));
@@ -109,7 +109,7 @@ class FilterTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
         ]);
         $header = Header::factory()->create([
             'user_id' => $user->id,
@@ -121,11 +121,11 @@ class FilterTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 2,
+            "stato" => 2,
         ]);
 
-        $response = $this->post(route('searchOrder' , ['accettazione' => 2]));
-        $response->assertSessionHas('accettazione');
+        $response = $this->post(route('searchOrder' , ['stato' => 2]));
+        $response->assertSessionHas('stato');
         $response = $this->get(route("orderList"));
     } 
 }

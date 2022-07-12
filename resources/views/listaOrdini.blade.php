@@ -17,11 +17,11 @@
                 </div>
                 <div class="d-flex">
                     <label for="exampleInputCategory" class="form-label"> <h3>Stato Accettazione:</h3></label>
-                    <select name="accettazione[]" multiple class="my-accettazione" >
+                    <select name="stato[]" multiple class="my-stato" >
                         <option value="Tutte"> Tutti </option>  
-                        <option value="{{Header::PREPARAZIONE}}"> In Preparazione</option>  
-                        <option value="{{Header::IN_CONSEGNA}}"> In Consegna </option>  
-                        <option value="{{Header::CONSEGNATO}}"> Consegnato </option>  
+                        <option value="{{Header::STATO_IN_PREPARAZIONE}}"> In Preparazione</option>  
+                        <option value="{{Header::STATO_IN_CONSEGNA}}"> In Consegna </option>  
+                        <option value="{{Header::STATO_CONSEGNATO}}"> Consegnato </option>  
                     </select>
                 </div>
                 <button class="btn btn-outline-light my-btn" style="height: 40px;" type="submit"><i class="fa-solid fa-magnifying-glass text-white"></i></button>
@@ -29,15 +29,15 @@
         </div>
     </div>
     <h1>Lista Ordini</h1>
-    @if(session('accettazione'))
+    @if(session('stato'))
         <div class="d-flex mt-3" >
             <h5> Filtri Attivi : </h5>
-            @foreach(session('accettazione') as $m)
-                @if($m == Header::PREPARAZIONE)
+            @foreach(session('stato') as $m)
+                @if($m == Header::STATO_IN_PREPARAZIONE)
                     <h6 class="mx-3"> In Preparazione</h6>
-                @elseif($m == Header::IN_CONSEGNA)
+                @elseif($m == Header::STATO_IN_CONSEGNA)
                     <h6 class="mx-3">In Consegna</h6>
-                @elseif($m == Header::CONSEGNATO)    
+                @elseif($m == Header::STATO_CONSEGNATO)    
                     <h6 class="mx-3">Consegnato</h6>
                 @endif
             @endforeach
@@ -45,7 +45,7 @@
     @endif
     <!-- tabella per gestore -->
     @can('Gestore')
-    <div class="container-fluid d-flex">
+    <!-- <div class="container-fluid d-flex "> -->
         
         <table class="table">
             <thead class="text-white">
@@ -53,7 +53,7 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Cognome</th>
                     <th scope="col">Citta</th>
-                    <th scope="col">Accettazione</th>
+                    <th scope="col">Stato</th>
                 </tr>
             </thead>
             <tbody class="table-holder text-white">
@@ -64,17 +64,20 @@
                         <td>{{$order->name}}</td>
                         <td>{{$order->surname}}</td>
                         <td>{{$order->citta}}</td>
-                        @if($order->accettazione == Header::PREPARAZIONE)
+                        @if($order->stato == Header::STATO_IN_PREPARAZIONE)
                             <td>In Preparazione</td>
-                        @elseif($order->accettazione == Header::IN_CONSEGNA)
+                        @elseif($order->stato == Header::STATO_IN_CONSEGNA)
                             <td>In Consegna</td>
-                        @elseif($order->accettazione == Header::CONSEGNATO)    
+                        @elseif($order->stato == Header::STATO_CONSEGNATO)    
                             <td>Consegnato</td>
                         @endif
                     </tr>    
                 @endforeach
             </tbody>
         </table>
+        <div>
+            {{$orders->links()}}
+        </div>
         @endcan
 
         <!-- tabella per cuoco -->
@@ -93,7 +96,7 @@
             <tbody class="text-white">
                 
                 @foreach($orders as $header)
-                @if($header->accettazione == Header::PREPARAZIONE)
+                
                     <tr>
                         <td>{{$header->name}}</td>
                         <td>{{$header->surname}}</td>
@@ -122,14 +125,14 @@
                                     <div class="modal-footer">
                                     
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                       
                                         
                                     </div>
                                     </div>
                                 </div>
                             </div>
                         
-                            <!-- <button class="">Pronto</button> -->
+                         
                         </td>
                         <td>
                             <div class="d-flex">
@@ -146,16 +149,20 @@
                             </div>
                         </td>
                     </tr>
-                @endif
+                
                 @endforeach
             </tbody>
         </table>
+        <div>
+            {{$orders->links()}}
+        </div>
         @endcan
 
         @can('Fattorino')
         <table class="table">
             <thead class="text-white">
                 <tr>
+                    <!-- <th scope="col">Nome Fattorino</th> -->
                     <th scope="col">Nome</th>
                     <th scope="col">Cognome</th>
                     <th scope="col">Città</th>
@@ -166,8 +173,9 @@
             <tbody class="text-white">
                 
                 @foreach($orders as $header)
-                    @if($header->accettazione == Header::IN_CONSEGNA)
+                    @if($header->stato === 2)
                         <tr class="hidden">
+                        
                             <td>{{$header->name}}</td>
                             <td>{{$header->surname}}</td>
                             <td>{{$header->citta}}</td>
@@ -193,11 +201,15 @@
                     @endif
                 @endforeach
             </tbody>
-        </table>  
+        </table> 
+        <div>
+            {{$orders->links()}}
+        </div> 
         @endcan
-        {{$orders->links()}}
-        <script type="text/javascript">
-        $('.my-accettazione').select2();
-        </script>
-    </div>
+    
+   
+
+    <script type="text/javascript">
+    $('.my-stato').select2();
+    </script>
 </x-layout>

@@ -23,9 +23,10 @@ class Header extends Model
         'accettazione',
     ];
 
-    const PREPARAZIONE = 1;
-    const IN_CONSEGNA = 2;
-    const CONSEGNATO = 3;
+    const STATO_CARRELLO = 0;
+    const STATO_IN_PREPARAZIONE = 1;
+    const STATO_IN_CONSEGNA = 2;
+    const STATO_CONSEGNATO = 3;
 
     public function selectedProducts(){
         return $this->hasMany(SelectedProduct::class);

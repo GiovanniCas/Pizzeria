@@ -26,13 +26,13 @@ class CuocoTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
         ]);
      
         $category = Category::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
         $response = $this->actingAs($user)->post(route('updateOrder' , $header->id) , [                
-            "accettazione" => 2,
+            "stato" => 2,
         ]);
         $this->assertDatabaseHas('headers' , [
             'id' => $header->id,
@@ -47,14 +47,14 @@ class CuocoTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
         ]);
 
         $response = $this->get(route('orderList'));
         $response->assertStatus(200);
 
         $response = $this->actingAs($user2)->post(route('updateOrder' , $header2->id) , [                
-            "accettazione" => 2,
+            "stato" => 2,
         ]);
         $response->assertStatus(405);
 

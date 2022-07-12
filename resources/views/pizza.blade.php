@@ -140,11 +140,13 @@
    
         @can('Gestore')   
         
-        {{$products->links() }}
         <a href="{{route('newProduct')}}" class="btn btn-danger" >Aggiungi Prodotto</a>
         @endcan
+        <div>
+            {{$products->links() }}
+        </div>
     @endguest
-   
+        
    
    
     <script type="text/javascript">

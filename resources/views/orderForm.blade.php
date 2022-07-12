@@ -37,7 +37,7 @@
                     
                     <div class="form-group">
                         <label class="active" for="expireDate">Data Consegna :</label>
-                        <input type="date" id="expireDate" name="data" required>
+                        <input type="date" id="datepicker"  class="form-control" name="data" required>
                     </div>
                     <div class="form-group">
                         <label class="active" for="timeStandard">Ora :</label>

@@ -76,42 +76,6 @@ class ProductTest extends TestCase
         $response->assertStatus(403);
     }
 
-    // public function test_caricamento_immagini_prodotto(){
-    //     $user = User::factory()->create(['ruolo' => 1]);
-    //     $user2 = User::factory()->create();
-
-    //     $category = Category::factory()->create();
-    //     $product = Product::factory()->create(['category_id' => $category->id]);
-    //     Storage::fake('avatars');
-    //     $file = UploadedFile::fake()->image('avatar.jpg');
-    //     $response = $this->actingAs($user)->post(route('uploadImages') ,
-    //     [
-    //         //'product_id' => $product->id,
-    //         'images' => $file
-    //     ]);
-        
-    //    // Storage::disk('avatars')->assertExists($file->getClientOriginalName());
-      
-    //     $this->assertDatabaseHas('images' , [
-    //         'product_id' => $product->id,
-    //         'img' => $file
-    //     ]);
-
-    //     $response = $this->get(route('welcome'));
-    //     $response->assertStatus(200);
-
-    //     $response = $this->actingAs($user2)->post(route('uploadImages') ,
-    //     [
-    //         'product_id' => $product->id,
-    //         'images' => $file
-    //     ]);
-    //     $response->assertStatus(403);
-    //     $response = $this->get(route('welcome'));
-    //     $response->assertStatus(200);
-
-    // }
-
-
 
     public function test_vista_modifica_prodotto(){
         $user = User::factory()->create(['ruolo' => 1]);
@@ -204,20 +168,4 @@ class ProductTest extends TestCase
     }
 
 
-
-    // //immagini dei prodotti
-    // public function test_caricamento_immagini(){
-    //     $category = Category::factory()->create();
-    //     $product = Product::factory()->create(['category_id' => $category->id]);
-    //     Storage::fake('avatars');
-    //     $file = UploadedFile::fake()->image('avatar.jpg');
-    //     $image = Image::factory()->create([
-    //         'product_id' => $product->id,
-    //         'img' => $file
-    //     ]);
-
-    //     $this->assertDatabaseHas('images' , [
-    //         'id' => $image->id,
-    //     ]);
-    // }
 }

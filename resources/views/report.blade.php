@@ -52,7 +52,7 @@
 
     <script>
         let data= @json($date);
-        let totale= @json($totale);
+        let totale= @json($totali_per_giorno);
         const ctx = document.getElementById('myChart');
         const myChart = new Chart(ctx, {
             type: 'bar',

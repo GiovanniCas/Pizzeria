@@ -140,6 +140,7 @@ class UserTest extends TestCase
     public function test_vista_lista_ordini(){
         $user = User::factory()->create();
         $header = Header::factory()->create(['user_id' => $user->id]);
+        session()->put('header_id' , $header->id);
         $category = Category::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
         $selectedProduct = SelectedProduct::factory()->create([
@@ -155,14 +156,28 @@ class UserTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,          
+            "stato" => 1,
+            'tot' => 20          
         ]);
-        
-        $response = $this->get(route('orderList' , $header->id ));
         
         $this->assertDatabaseHas('headers' , [
             'id' => $header->id,
+            'name' => 'paolo'
         ]);
+
+
+        $response = $this->post(route('searchOrder' , ['search' => 'pao']));
+        $response->assertSessionHas('searchOrder');
+        $response = $this->get(route("orderList"));
+        $response->assertStatus(200);
+
+        session()->forget('searchOrder');
+        $response = $this->get(route('orderList' , $header->id ));
+        $response->assertStatus(200);
+
+
+        
+
       
     }
 

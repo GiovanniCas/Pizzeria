@@ -46,7 +46,7 @@ class RevisorController extends Controller
         if (Gate::denies('Cuoco')) {
             abort(403);
         } 
-        $header->accettazione = 2;
+        $header->stato = Header::STATO_IN_CONSEGNA;
         $header->save();
         return redirect(route('orderList'));
     }
@@ -74,7 +74,7 @@ class RevisorController extends Controller
         if (Gate::denies('Fattorino')) {
             abort(403);
         }
-        $header->accettazione = 3;
+        $header->stato = Header::STATO_CONSEGNATO;
         $header->save();
         return redirect(route('orderList'));  //prima c'era fattorino
     }
@@ -99,7 +99,7 @@ class RevisorController extends Controller
                 foreach($ruolo as $m) {
 
                     if($m === "Tutte"){
-                        $q = $q->where('ruolo' , '<>' , 'Tutte');
+                        $q = $q->all();
                     } else{
                         $q = $q->where('name','LIKE','%'.$search.'%')
                             ->where('ruolo', $m)
@@ -163,238 +163,87 @@ class RevisorController extends Controller
     }
 
     public function orderList(){
-     
-        $prodottiSelezionati = SelectedProduct::all();
-        if(empty(session('searchOrder')) && empty(session('accettazione'))){
-            $orders = Header::where('user_id' , User::GESTORE)
-                    ->orWhere('user_id' , Auth::user()->id) 
-                    ->where('accettazione' , Header::IN_CONSEGNA) 
-                    ->paginate(4);
+        
+        //$prodottiSelezionati = SelectedProduct::all();
+        if(empty(session('searchOrder')) && empty(session('stato'))){
+            if(Auth::user()->ruolo == User::GESTORE){
+              //  dd(Auth::user());
+                $orders = Header::all()->where('stato' , '<>' , 0)->paginate(9);
+                return view('listaOrdini' , compact('orders'));
+            }
+            if(Auth::user()->ruolo == User::CUOCO){
+                $orders = Header::where('stato' , Header::STATO_IN_PREPARAZIONE)->paginate(9);
+                return view('listaOrdini' , compact('orders'));
+            }
+            if(Auth::user()->ruolo == User::FATTORINO){
+                $orders = Header::where('stato' , Header::STATO_IN_CONSEGNA)->paginate(9);
+                return view('listaOrdini' , compact('orders'));
+            }
+            
             
         }else{
             $search = session('searchOrder');
-            $accettazione = session('accettazione');
+            $stato = session('stato');
             $q = Header::query();
 
             if($search){
                 $q = $q->where('name','LIKE','%'.$search.'%');
             }
 
-            if($accettazione){
-                foreach($accettazione as $m){
+            if($stato){
+                foreach($stato as $m){
                     if($m === "Tutte"){
-                        $q = $q->where('accettazione' , '<>' , 'Tutte');
+                        $q = $q->where('stato' , '<>' , 'Tutte');
                     } else{
                     $q = $q->where('name','LIKE','%'.$search.'%')
-                        ->where('accettazione', $m)
-                        ->orWhere('accettazione', $m);
+                        ->where('stato', $m)
+                        ->orWhere('stato', $m);
                     }
                 }  
             }
-            $q = $q->paginate(4);
+            $q = $q->paginate(9);
             $orders = $q;
         }
 
-        return view('listaOrdini' , compact('orders'))->with(compact('prodottiSelezionati'));
+        $users = User::all();
+        return view('listaOrdini' , compact('orders'));//->with(compact('prodottiSelezionati'));
+            
     }
 
     public function searchOrder(Request $request){
        
         $search = $request->search;
-        $accettazione = $request->accettazione;
+        $stato = $request->stato;
 
         session()->put('searchOrder' , $search);
-        session()->put('accettazione' , $accettazione);
+        session()->put('stato' , $stato);
 
         return redirect(route('orderList'));
     }
 
     public function report(){
-      
-        // $ordini= Header::groupBy('data')
-        // // ->where('data' ,date('Y-m-d',strtotime("-6 days")))
-        // // ->orWhere('data' ,date('Y-m-d',strtotime("-5 days")))
-        // // ->orWhere('data' ,date('Y-m-d',strtotime("-4 days")))
-        // // ->orWhere('data' ,date('Y-m-d',strtotime("-3 days")))
-        // // ->orWhere('data' ,date('Y-m-d',strtotime("-2 days")))
-        // // ->orWhere('data' ,date('Y-m-d',strtotime("-1 days")))
-        // // ->orWhere('data' ,date('Y-m-d'))
-        // ->sum('tot');
-        
-        $totale = [ 
-            $giorno_uno= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-6 days")))->sum('tot'),
-            $giorno_due= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-5 days")))->sum('tot'),
-            $giorno_tre= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-4 days")))->sum('tot'),
-            $giorno_quattro= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-3 days")))->sum('tot'),
-            $giorno_cinque= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-2 days")))->sum('tot'),
-            $giorno_sei= Header::groupBy('data')->where('data' ,date('Y-m-d',strtotime("-1 days")))->sum('tot'),
-            $giorno_sette= Header::groupBy('data')->where('data' ,date('Y-m-d'))->sum('tot'),
-        ];
-        
-        //dd($totale);
 
-        $date= [
-            date('Y-m-d',strtotime("-6 days")) ,
-            date('Y-m-d',strtotime("-5 days")) ,
-            date('Y-m-d',strtotime("-4 days")) ,
-            date('Y-m-d',strtotime("-3 days")) ,
-            date('Y-m-d',strtotime("-2 days")) , 
-            date('Y-m-d',strtotime("-1 days")) ,
-            date('Y-m-d') , 
-        ];
-        
+        if (Gate::denies('Gestore')) {
+            abort(403);
+        } 
+      
+        $from = date('Y-m-d',strtotime("-6 days"));
+        $to = date('Y-m-d');
+        $totali_per_giorno = [];
+        $date = [];
+        $ordini= Header::all()->whereBetween('data' , [$from , $to])->where('stato' , '<>' , 0 )->sortBy('data')->groupBy('data');
        
-        return view('report' , compact('date'))->with(compact('totale'));
+        
+        foreach($ordini as  $ordine){
+            $totale_giornaliero = $ordine->sum('tot');
+            array_push($totali_per_giorno , $totale_giornaliero);
+            
+            $data = $ordine->value('data');
+            array_push($date, $data);
+            
+        }
+       
+        return view('report' , compact('date'))->with(compact('totali_per_giorno'));
     }
-
-        
-        //dd($pippo);
-        // $ordini = Header::where('data' , '<>' , null)->get();
-        // //dd($ordini);
-        // $totali_per_giorno = [];
-       
-        // foreach($ordini as $ordine){
-        //     $ordini = $ordini->groupBy('data')->SUM('tot');
-        //     dd($ordini);
-        //     $totale_giornaliero = [$ordine->data => $ordine->tot];
-        //     $controllo_esistenza_data = $ordini->where('data' , $ordine->data)->exists();
-        //     if(!$controllo_esistenza_data){
-        //         //dd('pio');
-        //         array_push($totali_per_giorno , $totale_giornaliero);
-        //         // $q = $totali_per_giorno->groupBy('data')->get();
-        //         // dd($q);
-                                
-        //     } else {
-        //         dd('ciao');
-        //         $pippo = $ordine->where('data' , $ordine->data)->increment('tot' , $ordine->tot) ;
-        //     }        
-        //         //array_push($totali_per_giorno , $totale_giornaliero);
-        //         //dd($totale);
-        // }
-        // // foreach($totale_giornaliero as $ordine->data => $ordine->tot){
-        // //     //dd($totali_per_giorno);
-        // //     $controllo_esistenza_data = array_search($ordine->data , $totali_per_giorno);
-        // //     //$ordine->where('data' , $ordine->data)->exists();
-        // //     //array_search( $ordine->data , $totali_per_giorno);
-        // //     //dd( $controllo_esistenza_data);
-        // //     if(!$controllo_esistenza_data){
-        // //         //dd('pio');
-        // //         array_push($totali_per_giorno , $totale_giornaliero);
-                                
-        // //     } else {
-        // //         dd('ciao');
-        // //         $pippo = $ordine->where('data' , $ordine->data)->increment('tot' , $ordine->tot) ;
-        // //     }        
-            
-        // //}
-            
-        
-        // dd($totali_per_giorno);
-        
-               
-        // $prezzo_totale_ordini = [];
-        // $prodottiSelezionati = SelectedProduct::all();
-        // foreach($prodottiSelezionati as $prodottoSelezionato){
-        //     $prezzo = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //     $tot = [$prodottoSelezionato->id => $prezzo ];
-            
-        //     array_push($prezzo_totale_ordini , $tot);
-        // }
-
-        
-        // // foreach($prezzo_totale_ordini as $id_prodotto_ordine => $prezzo_totale){
-        // //     $ordini =  Header::where('id' , $id_prodotto_ordine)->orWhere('data', '<>', null )->groupBy('data');
-            
-        // //    // dd($ordini);
-        // // }
-        
-                    
-
-        // $ordini1 = Header::where('data' ,date('Y-m-d',strtotime("-6 days")))->get();
-        // $totale1= 0;
-        // foreach( $ordini1 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale1 += $tot;
-        //     }
-        // }
-        // array_push($totale , $totale1 );
-
-        // $ordini2 = Header::where('data' ,date('Y-m-d',strtotime("-5 days")))->get();
-        // $totale2 = 0;
-        // foreach( $ordini2 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale2 += $tot;
-                
-        //     }
-        // }
-        // array_push($totale , $totale2);
-
-        // $ordini3 = Header::where('data' ,date('Y-m-d',strtotime("-4 days")))->get();
-        // $totale3 = 0;
-        // foreach( $ordini3 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale3 += $tot;
-                
-        //     }
-        // }
-        // array_push($totale , $totale3);
-
-        // $ordini4 = Header::where('data' ,date('Y-m-d',strtotime("-3 days")))->get();
-        // $totale4 = 0;
-        // foreach( $ordini4 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale4 += $tot;
-                
-                
-        //     }
-        // }
-        // array_push($totale , $totale4);
-
-        // $ordini5 = Header::where('data' ,date('Y-m-d',strtotime("-2 days")))->get();
-        // $totale5 = 0;
-        // foreach( $ordini5 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale5 += $tot;
-                
-        //     }
-        // }
-        // array_push($totale , $totale5);
-
-        // $ordini6 = Header::where('data' ,date('Y-m-d',strtotime("-1 days")))->get();
-        // $totale6 = 0;
-        // foreach( $ordini6 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale6 += $tot;
-        //     }
-        // }
-        // array_push($totale , $totale6);
-        
-        // $ordini7 = Header::where('data' ,date("Y-m-d"))->get();
-        // $totale7 = 0;
-        // foreach( $ordini7 as $ordine){
-        //     $prodottiSelezionati = SelectedProduct::all()->where('header_id' , $ordine->id);
-        //     foreach($prodottiSelezionati as $prodottoSelezionato){
-        //         $tot = $prodottoSelezionato->quantity * $prodottoSelezionato->price_uni;
-        //         $totale7 += $tot;
-                
-        //     }
-        // }
-        // array_push($totale , $totale7);
-        
-        
-
-      
-  
+ 
 }

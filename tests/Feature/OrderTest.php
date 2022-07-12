@@ -57,8 +57,9 @@ class OrderTest extends TestCase
             'header_id' => session('header_id'),
             'product_id' => $product->id
         ]);
+
         $response = $this->put(route("modificaQuantita" , $selectedProduct) , [
-            'quantity' => 21
+            'quantity' => [$selectedProduct->id => 21 ]
         ]);
         $this->assertDatabaseHas('selected_products' , [
             'id' => $selectedProduct->id,
@@ -88,7 +89,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
         ]);
        
         
@@ -104,7 +105,7 @@ class OrderTest extends TestCase
     
     public function test_pagina_guadagno(){
 
-        $user = User::factory()->create();
+        $user = User::factory()->create(['ruolo' => 1]);
         $header = Header::factory()->create(['user_id' => $user->id]);
         session()->put('header_id' , $header->id);
         $category = Category::factory()->create();
@@ -118,20 +119,20 @@ class OrderTest extends TestCase
         $selectedProduct = SelectedProduct::factory()->create([
             'product_id' => $product->id,
             'header_id'=> $header->id,
-            'quantity' => 9,
+            'quantity' => 23,
             'price_uni' => $product->price
         ]);
       
-        $response = $this->post(route('orderSubmit' , $header->id) , [              
+        $response = $this->actingAs($user)->post(route('orderSubmit' , $header->id) , [              
             "name" => "paolo",
             "surname" =>"rossi",
             "email" => "ciaone9876@hotmail.it",
             "indirizzo" => "ciao",
             "cap" => "ciao",
             "citta"=> "londra",
-            "data"=> "2022-07-05",
+            "data"=> "2022-07-12",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);
 
@@ -146,7 +147,7 @@ class OrderTest extends TestCase
             'price_uni' => $product->price
         ]);
         
-        $response = $this->post(route('orderSubmit' , $header2->id) , [              
+        $response = $this->actingAs($user)->post(route('orderSubmit' , $header2->id) , [              
             "name" => "paolo",
             "surname" =>"rossi",
             "email" => "ciaone9876@hotmail.it",
@@ -155,7 +156,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-07-06",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);   
         
@@ -170,7 +171,7 @@ class OrderTest extends TestCase
             'price_uni' => $product->price
         ]);
         
-        $response = $this->post(route('orderSubmit' , $header3->id) , [              
+        $response = $this->actingAs($user)->post(route('orderSubmit' , $header3->id) , [              
             "name" => "paolo",
             "surname" =>"rossi",
             "email" => "ciaone9876@hotmail.it",
@@ -179,7 +180,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-07-07",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);   
         
@@ -203,7 +204,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-07-08",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);   
         
@@ -227,7 +228,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-07-09",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);   
         
@@ -251,7 +252,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-07-10",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);   
         
@@ -275,7 +276,7 @@ class OrderTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-07-11",
             "time"=> "22:30",
-            "accettazione" => 1,
+            "stato" => 1,
             
         ]);
        

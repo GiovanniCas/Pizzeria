@@ -193,6 +193,7 @@ class ProductController extends Controller
         if (Gate::denies('Gestore')) {
             abort(403);            
         } 
+      
 
         $product->name = $request->name;
         $product->description = $request->description;

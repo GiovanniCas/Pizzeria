@@ -27,7 +27,7 @@ class FattorinoTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1, 
+            "stato" => 1, 
         ]);
         $category = Category::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);  
@@ -60,22 +60,22 @@ class FattorinoTest extends TestCase
             "citta"=> "londra",
             "data"=> "2022-06-29",
             "time"=> "22:30",
-            "accettazione" => 1,          
+            "stato" => 1,          
         ]);
         $response = $this->actingAs($user)->put(route('deliveredOrder' , $header->id) , [              
            
-            "accettazione" => 3,          
+            "stato" => 3,          
         ]);
         $this->assertDatabaseHas('headers', [
             'id'=> $header->id,
-            'accettazione' => 3,
+            'stato' => 3,
         ]);
         $response = $this->get(route('orderList'));
         $response->assertStatus(200);
 
         $response = $this->actingAs($user2)->put(route('deliveredOrder' , $header->id) , [              
            
-            "accettazione" => 3,          
+            "stato" => 3,          
         ]);
         $response->assertStatus(403);
 

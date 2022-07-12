@@ -98,18 +98,15 @@ class PublicController extends Controller
     // }
     
     public function modificaQuantita(Request $request ){
+        
         $quantities = $request->input(['quantity']);
-        //dd($quantities);
+       
         foreach($quantities as $id_prodottoSelezionato => $nuova_quantita){
             $prodottoSelezionato = SelectedProduct::where('id' , $id_prodottoSelezionato)->where('header_id' , session('header_id'))->update(['quantity' => $nuova_quantita]);
-            //dd($prodottoSelezionato->id);
-                // if($prodottoSelezionato->quantity = 0){
-                //     $prodottoSelezionato->remove();               
-                // }
-            
+           
         }
         $prodottiSelezionati = SelectedProduct::all()->where('header_id', session('header_id'));//->where('quantity', 0);
-        //dd('ciao');
+        
         foreach( $prodottiSelezionati as $prodottoSelezionato) {
             if($prodottoSelezionato->quantity === 0){
                 $prodottoSelezionato->delete();
@@ -118,7 +115,6 @@ class PublicController extends Controller
 
         $prodottiSelezionati = SelectedProduct::all()->where('header_id', session('header_id'));//->where('quantity', 0);
 
-        // dd(count($prodottiSelezionati)) ;
         if(count($prodottiSelezionati) > 0) {
             return view("orderForm");
         } else {
@@ -128,13 +124,7 @@ class PublicController extends Controller
     }
 
     public function orderForm(Request $request){
-        // $prodottiSelezionati = SelectedProduct::all()->where('header_id', session('header_id'))->where('quantity' , 0);
-        // if(count($prodottiSelezionati) != 0) {
-        //     return redirect(route("orderForm"))->with(compact('prodottiSelezionati'));
-        // } else {
-        //     return redirect(route('welcome'));
-
-        // }
+     
         return view("orderForm");
     }
 
@@ -147,6 +137,7 @@ class PublicController extends Controller
             $totale += $tot;
             
         }
+        
         $order = Header::where('id' , session('header_id'))->update([
             'name' => $request->input('name'),
             'surname' =>$request->input('surname'),
@@ -156,7 +147,7 @@ class PublicController extends Controller
             'email' => $request->input('email'),
             'data' => $request->input('data'),
             'time' => $request->input('time'),
-            'accettazione' => 1,
+            'stato' => 1,
             'tot' => $totale,
         ]);  
 
